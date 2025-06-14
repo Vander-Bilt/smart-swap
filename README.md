@@ -1,4 +1,4 @@
-# roop-unleashed
+# smart-swap
 
 [Changelog](#changelog) • [Installation](#installation) • [Usage](#usage) • [Example](#example) • [FAQ](#faq)
 
