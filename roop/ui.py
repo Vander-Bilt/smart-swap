@@ -7,6 +7,7 @@ import shutil
 import roop.globals
 import roop.metadata
 import roop.utilities as util
+from roop.predictor import predict_image, predict_video
 
 from roop.face_util import extract_face_images
 from roop.capturer import get_video_frame, get_video_frame_total, get_image_frame
@@ -733,6 +734,41 @@ def on_destfiles_changed(destfiles):
 
     if destfiles is None or len(destfiles) < 1:
         return gr.Slider.update(value=0, maximum=0)
+
+
+    nsfw_detected_and_removed = False
+    for file_obj in destfiles:
+        if hasattr(file_obj, 'name'):
+            filepath = file_obj.name
+        else:
+            filepath = str(file_obj)
+        
+        filename = os.path.basename(filepath)
+
+        is_nsfw = False
+        if util.is_image(filepath):
+            if predict_image(filepath):
+                is_nsfw = True
+        elif util.is_video(filepath) or filename.lower().endswith('gif'):
+            if predict_video(filepath):
+                is_nsfw = True
+        
+        if is_nsfw:
+            gr.Info(f"NSFW content detected in {filename}. File removed and skipped.")
+            nsfw_detected_and_removed = True
+            try:
+                if os.path.exists(filepath):
+                    os.remove(filepath)
+            except Exception as e:
+                gr.Error(f"Error deleting NSFW file {filename}: {e}")
+            break
+
+    if nsfw_detected_and_removed:
+        return gr.Files.update(value=[]), gr.Slider.update(value=0, maximum=0, interactive=False)
+
+
+
+    
     
     selected_preview_index = 0
     
