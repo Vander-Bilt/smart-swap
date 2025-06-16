@@ -100,7 +100,7 @@ def run():
         ssl_verify = False if server_name == '0.0.0.0' else True
         with gr.Blocks(title=f'{roop.metadata.name} {roop.metadata.version}', theme=roop.globals.CFG.selected_theme, css=mycss) as ui:
             with gr.Row(variant='panel'):
-                    gr.Markdown(f"### [{roop.metadata.name} {roop.metadata.version}](https://github.com/C0untFloyd/roop-unleashed)")
+                    gr.Markdown(f"### [{roop.metadata.name} {roop.metadata.version}](https://nav001.online)")
                     gr.HTML(util.create_version_html(), elem_id="versions")
             with gr.Tab("Face Swap"):
                 with gr.Row():
