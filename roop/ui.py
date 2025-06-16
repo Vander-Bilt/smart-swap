@@ -7,6 +7,7 @@ import shutil
 import roop.globals
 import roop.metadata
 import roop.utilities as util
+from roop.predictor import predict_image, predict_video
 
 from roop.face_util import extract_face_images
 from roop.capturer import get_video_frame, get_video_frame_total, get_image_frame
@@ -269,18 +270,7 @@ def run():
 
             previewinputs = [preview_frame_num, bt_destfiles, fake_preview, selected_enhancer, selected_face_detection,
                                 max_face_distance, blend_ratio, chk_useclip, clip_text] 
-            input_faces.select(on_select_input_face, None, None).then(fn=on_preview_frame_changed, inputs=previewinputs, outputs=[previewimage])
-            bt_remove_selected_input_face.click(fn=remove_selected_input_face, outputs=[input_faces])
-            bt_srcimg.change(fn=on_srcimg_changed, show_progress='full', inputs=bt_srcimg, outputs=[dynamic_face_selection, face_selection, input_faces])
-
-
-            target_faces.select(on_select_target_face, None, None)
-            bt_remove_selected_target_face.click(fn=remove_selected_target_face, outputs=[target_faces])
-
-            previewinputs = [preview_frame_num, bt_destfiles, fake_preview, selected_enhancer, selected_face_detection,
-                                max_face_distance, blend_ratio, chk_useclip, clip_text] 
-
-            bt_destfiles.change(fn=on_destfiles_changed, inputs=[bt_destfiles], outputs=[preview_frame_num]).then(fn=on_preview_frame_changed, inputs=previewinputs, outputs=[previewimage])
+            bt_destfiles.change(fn=on_destfiles_changed, inputs=[bt_destfiles], outputs=[bt_destfiles, preview_frame_num]).then(fn=on_preview_frame_changed, inputs=previewinputs, outputs=[previewimage])
             bt_destfiles.select(fn=on_destfiles_selected, inputs=[bt_destfiles], outputs=[preview_frame_num]).then(fn=on_preview_frame_changed, inputs=previewinputs, outputs=[previewimage])
             bt_destfiles.clear(fn=on_clear_destfiles, outputs=[target_faces])
             bt_download_target_url.click(fn=on_download_target_url, inputs=[target_url_input], outputs=[bt_destfiles, preview_frame_num]).then(fn=on_preview_frame_changed, inputs=previewinputs, outputs=[previewimage])
@@ -374,7 +364,7 @@ def on_download_target_url(url_input, progress=gr.Progress()):
     global RECENT_DIRECTORY_TARGET
     if not url_input:
         gr.Warning("URL input is empty.")
-        return None, gr.Slider.update() # Return None for bt_destfiles and no change for preview_frame_num
+        return None, gr.Slider.update() 
 
     download_dir = os.path.join(os.getcwd(), "temp", "downloaded_targets")
     os.makedirs(download_dir, exist_ok=True)
@@ -384,30 +374,32 @@ def on_download_target_url(url_input, progress=gr.Progress()):
     progress(1, desc="Download complete.")
 
     if downloaded_file_path:
+        is_nsfw = False
+        if util.is_image(downloaded_file_path):
+            if predict_image(downloaded_file_path):
+                is_nsfw = True
+        elif util.is_video(downloaded_file_path):
+            if predict_video(downloaded_file_path):
+                is_nsfw = True
+        
+        if is_nsfw:
+            gr.Info(f"NSFW content detected in downloaded file {os.path.basename(downloaded_file_path)}. File removed.")
+            try:
+                if os.path.exists(downloaded_file_path):
+                    os.remove(downloaded_file_path)
+            except Exception as e:
+                gr.Error(f"Error deleting NSFW downloaded file: {e}")
+            # Return update for bt_destfiles (empty) and slider (disabled)
+            return gr.Files.update(value=[]), gr.Slider.update(value=0, maximum=0, interactive=False)
+
         RECENT_DIRECTORY_TARGET = download_dir
-        # Simulate the file being selected in bt_destfiles
-        # We need to return a list of file paths for the gr.Files component
-        # And then trigger the subsequent updates for preview
-        # The on_destfiles_changed function expects a list of TemporaryFileWrapper objects
-        # or a list of file paths. Here we provide a list with the single downloaded file path.
-        
-        # Update bt_destfiles with the new file
-        # Gradio's gr.Files component expects a list of file paths or TemporaryFileWrapper objects.
-        # We'll update it with the path of the downloaded file.
-        # It's better to append to existing files if any, or set it if none.
-        # For simplicity here, we'll just set it to the new file.
-        # If you need to append, you'd need to get current bt_destfiles value first.
-        
-        # Trigger on_destfiles_changed which updates preview_frame_num
-        # and then on_preview_frame_changed updates the preview image
-        # The output of this function is directly fed into bt_destfiles and preview_frame_num
-        # So we call on_destfiles_changed manually to get the correct preview_frame_num update
         updated_preview_frame_num_state = on_destfiles_changed([downloaded_file_path])
-        return [downloaded_file_path], updated_preview_frame_num_state
+        # Pass the file list and the slider state
+        return [downloaded_file_path], updated_preview_frame_num_state 
     else:
         gr.Error("Failed to download file from URL.")
-        return None, gr.Slider.update() # No change if download failed
-        
+        return None, gr.Slider.update() 
+
 
 
 def on_settings_changed(evt: gr.SelectData):
@@ -430,13 +422,26 @@ def on_srcimg_changed(imgsrc, progress=gr.Progress()):
     
     IS_INPUT = True
 
-    if imgsrc == None or last_image == imgsrc:
+    if imgsrc == None: # Allow processing even if last_image is the same, for re-processing
         return gr.Column.update(visible=False), None, input_thumbs
     
     last_image = imgsrc
     
     progress(0, desc="Retrieving faces from image", )      
     source_path = imgsrc
+
+    if predict_image(source_path):
+        gr.Info(f"NSFW content detected in source image {os.path.basename(source_path)}. File removed.")
+        try:
+            if os.path.exists(source_path):
+                os.remove(source_path)
+        except Exception as e:
+            gr.Error(f"Error deleting NSFW source image: {e}")
+        # Clear relevant UI elements
+        input_thumbs.clear()
+        roop.globals.INPUT_FACES.clear()
+        return gr.Column.update(visible=False), None, [] # Return empty gallery for input_thumbs
+
     thumbs = []
     if util.is_image(source_path):
         roop.globals.source_path = source_path
@@ -449,14 +454,23 @@ def on_srcimg_changed(imgsrc, progress=gr.Progress()):
             
     progress(1.0, desc="Retrieving faces from image")      
     if len(thumbs) < 1:
-        raise gr.Error('No faces detected!')
+        # Don't raise error, just inform, as NSFW check might have already removed it or no faces indeed
+        gr.Info('No faces detected or image was removed due to NSFW content.')
+        input_thumbs.clear()
+        roop.globals.INPUT_FACES.clear()
+        return gr.Column.update(visible=False), None, []
 
     if len(thumbs) == 1:
+        roop.globals.INPUT_FACES.clear() # Clear before adding new ones
+        input_thumbs.clear()
         roop.globals.INPUT_FACES.append(SELECTION_FACES_DATA[0][0])
         input_thumbs.append(thumbs[0])
         return gr.Column.update(visible=False), None, input_thumbs
        
-    return gr.Column.update(visible=True), thumbs, gr.Gallery.update(visible=True)
+    # If multiple faces, clear previous before showing selection
+    roop.globals.INPUT_FACES.clear()
+    input_thumbs.clear() 
+    return gr.Column.update(visible=True), thumbs, gr.Gallery.update(value=input_thumbs, visible=True)
 
 def on_select_input_face(evt: gr.SelectData):
     global SELECTED_INPUT_FACE_INDEX
@@ -732,24 +746,57 @@ def on_destfiles_changed(destfiles):
     global selected_preview_index
 
     if destfiles is None or len(destfiles) < 1:
-        return gr.Slider.update(value=0, maximum=0)
-    
-    selected_preview_index = 0
-    
-    # 处理字符串路径或文件对象
-    if isinstance(destfiles[selected_preview_index], str):
-        filepath = destfiles[selected_preview_index]
+        # Return updates for both File component and Slider
+        return gr.Files.update(value=[]), gr.Slider.update(value=0, maximum=0, interactive=False)
+
+    valid_files = []
+    nsfw_detected_and_removed = False
+    for file_obj in destfiles:
+        if hasattr(file_obj, 'name'):
+            filepath = file_obj.name
+        else:
+            filepath = str(file_obj) 
+        
+        filename = os.path.basename(filepath)
+        is_nsfw = False
+        if util.is_image(filepath):
+            if predict_image(filepath):
+                is_nsfw = True
+        elif util.is_video(filepath) or filename.lower().endswith('gif'):
+            if predict_video(filepath):
+                is_nsfw = True
+        
+        if is_nsfw:
+            gr.Info(f"NSFW content detected in {filename}. File removed and skipped.")
+            nsfw_detected_and_removed = True
+            try:
+                if os.path.exists(filepath):
+                    os.remove(filepath)
+            except Exception as e:
+                gr.Error(f"Error deleting NSFW file {filename}: {e}")
+            continue 
+        valid_files.append(file_obj) 
+
+    if not valid_files:
+        return gr.Files.update(value=[]), gr.Slider.update(value=0, maximum=0, interactive=False)
+
+    selected_preview_index = 0 
+    first_valid_file_obj = valid_files[0]
+    if hasattr(first_valid_file_obj, 'name'):
+        filepath = first_valid_file_obj.name
         filename = os.path.basename(filepath)
     else:
-        filename = destfiles[selected_preview_index].name
-        filepath = destfiles[selected_preview_index].name
-        
+        filepath = str(first_valid_file_obj)
+        filename = os.path.basename(filepath)
+
+    total_frames = 0
     if util.is_video(filepath) or filename.lower().endswith('gif'):
         total_frames = get_video_frame_total(filepath)
-    else:
-        total_frames = 0
     
-    return gr.Slider.update(value=0, maximum=total_frames)
+    slider_update = gr.Slider.update(value=0, maximum=total_frames, interactive=total_frames > 0)
+
+    # Always return updates for both File component and Slider
+    return gr.Files.update(value=valid_files), slider_update
 
 
 
