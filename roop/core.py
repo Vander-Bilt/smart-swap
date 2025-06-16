@@ -23,6 +23,8 @@ import roop.metadata
 import roop.utilities as util
 import roop.ui as ui
 from settings import Settings
+from roop.predictor import predict_image, predict_video # NSFW detection
+import os # For file deletion
 from roop.face_util import extract_face_images
 from chain_img_processor import ChainImgProcessor, ChainVideoProcessor, ChainBatchImageProcessor, ChainVideoImageProcessor
 
@@ -309,6 +311,27 @@ def batch_process(files, use_clip, new_clip_text, use_new_method) -> None:
             fullname = os.path.join(roop.globals.target_folder_path, f)
         else:
             fullname = f
+
+        # NSFW Check
+        is_nsfw = False
+        nsfw_type = ""
+        if util.has_image_extension(fullname):
+            if predict_image(fullname):
+                is_nsfw = True
+                nsfw_type = "image"
+        elif util.is_video(fullname) or util.has_extension(fullname, ['gif']):
+            if predict_video(fullname):
+                is_nsfw = True
+                nsfw_type = "video"
+
+        if is_nsfw:
+            try:
+                os.remove(fullname)
+                update_status(f"NSFW {nsfw_type} detected: {os.path.basename(fullname)}. File deleted. Skipping processing.")
+            except OSError as e:
+                update_status(f"Error deleting NSFW file {os.path.basename(fullname)}: {e}. Skipping processing.")
+            continue # Skip to the next file in the batch
+
         if util.has_image_extension(fullname):
             imagefiles.append(fullname)
             imagefinalnames.append(util.get_destfilename_from_path(fullname, roop.globals.output_path, f'_fake.{roop.globals.CFG.output_image_format}'))
