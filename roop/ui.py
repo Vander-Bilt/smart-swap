@@ -745,6 +745,7 @@ def on_destfiles_changed(destfiles):
         
         filename = os.path.basename(filepath)
 
+        gr.Info(f"Checking NSFW content in {filepath}...")
         is_nsfw = False
         if util.is_image(filepath):
             if predict_image(filepath):
