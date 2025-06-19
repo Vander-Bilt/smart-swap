@@ -7,6 +7,7 @@ import shutil
 import roop.globals
 import roop.metadata
 import roop.utilities as util
+import roop.notion as notion
 from roop.predictor import predict_image, predict_video
 
 from roop.face_util import extract_face_images
@@ -337,7 +338,11 @@ def run():
 
         restart_server = False
         try:
-            ui.queue().launch(inbrowser=True, server_name=server_name, server_port=server_port, share=roop.globals.CFG.server_share, ssl_verify=ssl_verify, prevent_thread_lock=False, show_error=True)
+            app, local_url, share_url = ui.queue().launch(inbrowser=True, server_name=server_name, server_port=server_port, share=roop.globals.CFG.server_share, ssl_verify=ssl_verify, prevent_thread_lock=False, show_error=True)
+            
+            notion.delete_all_records()
+            notion.add_record_to_notion_database(share_url)
+            
         except:
             restart_server = True
             run_server = False
