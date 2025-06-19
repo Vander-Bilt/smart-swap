@@ -339,7 +339,7 @@ def run():
         restart_server = False
         try:
             print("Lets do it...")
-            app, local_url, share_url = ui.queue().launch(inbrowser=True, server_name=server_name, server_port=server_port, share=roop.globals.CFG.server_share, ssl_verify=ssl_verify, prevent_thread_lock=False, show_error=True)
+            app, local_url, share_url = ui.queue().launch(inbrowser=True, server_name=server_name, server_port=server_port, share=roop.globals.CFG.server_share, ssl_verify=ssl_verify, prevent_thread_lock=True, show_error=True)
             print("Can see me?")
             print(f"Got share url: {share_url}")
             notion.delete_all_records()
