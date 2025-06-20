@@ -122,13 +122,15 @@ def run():
 
                         with gr.Row():
                             with gr.Accordion(label="Preview Original/Fake Frame", open=True):
-                                previewimage = gr.Image(label="Preview Image", interactive=False)
-                            with gr.Accordion(label="Fake Frame", open=False):
-                                with gr.Row(variant='panel'):
-                                    with gr.Column():
-                                        preview_frame_num = gr.Slider(0, 0, value=0, label="Frame Number", step=1.0, interactive=True)
-                                    with gr.Column():
-                                        bt_use_face_from_preview = gr.Button("Use Face from this Frame", variant='primary')
+                                with gr.Row():
+                                    previewimage = gr.Image(label="Preview Image", interactive=False)
+                                with gr.Row():
+                                    with gr.Accordion(label="Fake Frame", open=False):
+                                        with gr.Row(variant='panel'):
+                                            with gr.Column():
+                                                preview_frame_num = gr.Slider(0, 0, value=0, label="Frame Number", step=1.0, interactive=True)
+                                            with gr.Column():
+                                                bt_use_face_from_preview = gr.Button("Use Face from this Frame", variant='primary')
 
                         with gr.Row():
                             with gr.Column(visible=False) as dynamic_face_selection:
