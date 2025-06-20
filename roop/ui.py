@@ -119,17 +119,29 @@ def run():
                         with gr.Row():
                             target_url_input = gr.Textbox(label="Target URL (Image/Video)", placeholder="Enter URL here...")
                             bt_download_target_url = gr.Button("Download from URL")
-                with gr.Row():
-                    with gr.Column(visible=False) as dynamic_face_selection:
-                        face_selection = gr.Gallery(label="Detected faces", allow_preview=True, preview=True, height=256, object_fit="scale-down")
+
                         with gr.Row():
-                            bt_faceselect = gr.Button("Use selected face")
-                            bt_cancelfaceselect = gr.Button("Done")
+                            with gr.Accordion(label="Preview Original/Fake Frame", open=False):
+                                previewimage = gr.Image(label="Preview Image", interactive=False)
+                                with gr.Row(variant='panel'):
+                                    with gr.Column():
+                                        preview_frame_num = gr.Slider(0, 0, value=0, label="Frame Number", step=1.0, interactive=True)
+                                    with gr.Column():
+                                        bt_use_face_from_preview = gr.Button("Use Face from this Frame", variant='primary')
+
+                        with gr.Row():
+                            with gr.Column(visible=False) as dynamic_face_selection:
+                                face_selection = gr.Gallery(label="Detected faces", allow_preview=True, preview=True, height=256, object_fit="scale-down")
+                                with gr.Row():
+                                    bt_faceselect = gr.Button("Use selected face")
+                                    bt_cancelfaceselect = gr.Button("Done")
             
                 with gr.Row():
                     with gr.Column(scale=1):
                         selected_face_detection = gr.Dropdown(["First found", "All faces", "Selected face", "All female", "All male"], value="First found", label="Select face selection for swapping")
                         max_face_distance = gr.Slider(0.01, 1.0, value=0.65, label="Max Face Similarity Threshold")
+                
+                with gr.Row():
                     with gr.Column(scale=1):
                         video_swapping_method = gr.Dropdown(["Extract Frames to media","In-Memory processing"], value="In-Memory", label="Select video processing method", interactive=True)
                         chk_det_size = gr.Checkbox(label="Use default Det-Size", value=True, elem_id='default_det_size', interactive=True)
@@ -153,11 +165,11 @@ def run():
                                 bt_preview_mask = gr.Button("Show Mask Preview", variant='secondary')
                             with gr.Column(scale=2):
                                 maskpreview = gr.Image(label="Preview Mask", shape=(None,512), interactive=False)
-                with gr.Row():
-                    with gr.Accordion(label="Huggingface Token", open=False):
-                        with gr.Row():
-                            with gr.Column():
-                                hf_token = gr.Textbox(label="HuggingFace Token", placeholder="Enter your HuggingFace token to upload results", type="password")
+                # with gr.Row():
+                #     with gr.Accordion(label="Huggingface Token", open=False):
+                #         with gr.Row():
+                #             with gr.Column():
+                #                 hf_token = gr.Textbox(label="HuggingFace Token", placeholder="Enter your HuggingFace token to upload results", type="password")
                 
                 with gr.Row(variant='panel'):
                     with gr.Column():
@@ -174,14 +186,14 @@ def run():
                             gr.Button("Open Output Folder", size='sm').click(fn=lambda: util.open_folder(util.resolve_relative_path('../output/')))
                             resultfiles = gr.Files(label='Processed File(s)', interactive=False)
                             resultimage = gr.Image(type='filepath', interactive=False)
-                    with gr.Column():
-                        with gr.Accordion(label="Preview Original/Fake Frame", open=True):
-                            previewimage = gr.Image(label="Preview Image", interactive=False)
-                            with gr.Row(variant='panel'):
-                                with gr.Column():
-                                    preview_frame_num = gr.Slider(0, 0, value=0, label="Frame Number", step=1.0, interactive=True)
-                                with gr.Column():
-                                    bt_use_face_from_preview = gr.Button("Use Face from this Frame", variant='primary')
+                    # with gr.Column():
+                    #     with gr.Accordion(label="Preview Original/Fake Frame", open=False):
+                    #         previewimage = gr.Image(label="Preview Image", interactive=False)
+                    #         with gr.Row(variant='panel'):
+                    #             with gr.Column():
+                    #                 preview_frame_num = gr.Slider(0, 0, value=0, label="Frame Number", step=1.0, interactive=True)
+                    #             with gr.Column():
+                    #                 bt_use_face_from_preview = gr.Button("Use Face from this Frame", variant='primary')
                         
             with gr.Tab("Live Cam"):
                 cam_toggle = gr.Checkbox(label='Activate', value=live_cam_active)
