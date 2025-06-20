@@ -121,8 +121,9 @@ def run():
                             bt_download_target_url = gr.Button("Download from URL")
 
                         with gr.Row():
-                            with gr.Accordion(label="Preview Original/Fake Frame", open=False):
+                            with gr.Accordion(label="Preview Original/Fake Frame", open=True):
                                 previewimage = gr.Image(label="Preview Image", interactive=False)
+                            with gr.Accordion(label="Fake Frame", open=False):
                                 with gr.Row(variant='panel'):
                                     with gr.Column():
                                         preview_frame_num = gr.Slider(0, 0, value=0, label="Frame Number", step=1.0, interactive=True)
