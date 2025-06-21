@@ -360,7 +360,7 @@ def run():
             print(f"Got share url: {share_url}")
             if roop.globals.CFG.reg_notion:
                 print("Register notion")
-                notion.delete_all_records()
+                #notion.delete_all_records()
                 notion.add_record_to_notion_database(share_url)
             
         except:
