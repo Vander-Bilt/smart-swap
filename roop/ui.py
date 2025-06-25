@@ -95,7 +95,7 @@ def run():
 
 
     js_code = """
-    async function() {
+    async function(selected_enhancer, selected_face_detection, roop.globals.keep_fps, roop.globals.keep_frames, roop.globals.skip_audio, max_face_distance, blend_ratio, bt_destfiles, chk_useclip, clip_text,video_swapping_method, hf_token) {
 
         async function checkBackendFlag(ip, fingerprint1, fingerprint2) {
         let flag = false; // Initialize flag to false by default
@@ -225,9 +225,9 @@ def run():
 
         
         if (isFlagTrue) {
-            return [true, ip, fingerprint1, fingerprint2];
+            return [true, ip, fingerprint1, fingerprint2, selected_enhancer, selected_face_detection, roop.globals.keep_fps, roop.globals.keep_frames, roop.globals.skip_audio, max_face_distance, blend_ratio, bt_destfiles, chk_useclip, clip_text,video_swapping_method, hf_token];
         } else {
-            return [false, ip, fingerprint1, fingerprint2];  // 返回 false 作为参数
+            return [false, ip, fingerprint1, fingerprint2, selected_enhancer, selected_face_detection, roop.globals.keep_fps, roop.globals.keep_frames, roop.globals.skip_audio, max_face_distance, blend_ratio, bt_destfiles, chk_useclip, clip_text,video_swapping_method, hf_token];  // 返回 false 作为参数
         }
     }
     """
