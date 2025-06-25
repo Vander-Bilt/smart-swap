@@ -101,14 +101,7 @@ def run():
         console.log('selected_face_detection:', selected_face_detection);
         console.log('keep_fps:', keep_fps);
         console.log('keep_frames:', keep_frames);
-        console.log('skip_audio:', skip_audio);
-        console.log('max_face_distance:', max_face_distance);
-        console.log('blend_ratio:', blend_ratio);
-        console.log('bt_destfiles:', bt_destfiles);
-        console.log('chk_useclip:', chk_useclip);
-        console.log('clip_text:', clip_text);
-        console.log('video_swapping_method:', video_swapping_method);
-        console.log('hf_token:', hf_token);
+
 
         async function checkBackendFlag(ip, fingerprint1, fingerprint2) {
         let flag = false; // Initialize flag to false by default
