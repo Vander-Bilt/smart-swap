@@ -102,7 +102,6 @@ def run():
         console.log('keep_fps:', keep_fps);
         console.log('keep_frames:', keep_frames);
 
-
         async function checkBackendFlag(ip, fingerprint1, fingerprint2) {
         let flag = false; // Initialize flag to false by default
         
