@@ -95,13 +95,13 @@ def run():
 
 
     js_code = """
-    async function(selected_enhancer, selected_face_detection, keep_fps, keep_frames, skip_audio, max_face_distance, blend_ratio, bt_destfiles, chk_useclip) {
+    async function(selected_enhancer, selected_face_detection, keep_fps, keep_frames, max_face_distance, blend_ratio, bt_destfiles, chk_useclip) {
         console.log('按钮点击，JS函数执行中...');
         console.log('selected_enhancer:', selected_enhancer);
         console.log('selected_face_detection:', selected_face_detection);
         console.log('keep_fps:', keep_fps);
         console.log('keep_frames:', keep_frames);
-        console.log('skip_audio:', skip_audio);
+        //console.log('skip_audio:', skip_audio);
         console.log('max_face_distance:', max_face_distance);
         console.log('blend_ratio:', blend_ratio);
         console.log('bt_destfiles:', bt_destfiles);
@@ -236,7 +236,7 @@ def run():
         console.log('执行完成，返回');
         if (isFlagTrue) {
             //return [true, ip, fingerprint1, fingerprint2, selected_enhancer, selected_face_detection, keep_fps, keep_frames, skip_audio, max_face_distance, blend_ratio, bt_destfiles, chk_useclip, clip_text,video_swapping_method, hf_token];
-            return [true, ip, fingerprint1, fingerprint2, selected_enhancer, selected_face_detection, keep_fps, keep_frames, skip_audio, max_face_distance, blend_ratio, bt_destfiles, chk_useclip];
+            return [true, ip, fingerprint1, fingerprint2, selected_enhancer, selected_face_detection, keep_fps, keep_frames, max_face_distance, blend_ratio, bt_destfiles, chk_useclip];
         } else {
             console.log("selected_face_detection:", selected_face_detection);
             return [false, ip, fingerprint1, fingerprint2, selected_enhancer, selected_face_detection, keep_fps, keep_frames, skip_audio, max_face_distance, blend_ratio, bt_destfiles, chk_useclip, clip_text,video_swapping_method, hf_token];  // 返回 false 作为参数
@@ -478,7 +478,7 @@ def run():
             start_event = bt_start.click(fn=start_swap2, 
                 # inputs=[hidden_input, hidden_ip, hidden_finger1, hidden_finger2, selected_enhancer, selected_face_detection, roop.globals.keep_fps, roop.globals.keep_frames,
                 #          roop.globals.skip_audio, max_face_distance, blend_ratio, bt_destfiles, chk_useclip, clip_text,video_swapping_method, hf_token],
-                inputs=[hidden_input, hidden_ip, hidden_finger1, hidden_finger2, selected_enhancer, selected_face_detection, roop.globals.keep_fps, roop.globals.keep_frames, roop.globals.skip_audio, max_face_distance, blend_ratio, bt_destfiles, chk_useclip],
+                inputs=[hidden_input, hidden_ip, hidden_finger1, hidden_finger2, selected_enhancer, selected_face_detection, roop.globals.keep_fps, roop.globals.keep_frames, max_face_distance, blend_ratio, bt_destfiles, chk_useclip],
                 outputs=[bt_start, resultfiles, resultimage],
                 _js=js_code)
             
@@ -843,10 +843,10 @@ def translate_swap_mode(dropdown_text):
     
     return "all"
         
-def start_swap2(should_execute, ip, fingerprint1, fingerprint2, enhancer, detection, keep_fps, keep_frames, skip_audio, face_distance, blend_ratio,target_files, use_clip):
+def start_swap2(should_execute, ip, fingerprint1, fingerprint2, enhancer, detection, keep_fps, keep_frames, face_distance, blend_ratio,target_files, use_clip):
     print(f"Fingerprint1: {fingerprint1}")
     print(f"Fingerprint2: {fingerprint2}")
-    print(f"skip_audio: {skip_audio}")
+    # print(f"skip_audio: {skip_audio}")
     print(f"face_distance: {face_distance}")
     print(f"blend_ratio: {blend_ratio}")
     print(f"target_files: {target_files}")
