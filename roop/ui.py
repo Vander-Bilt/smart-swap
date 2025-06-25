@@ -857,7 +857,33 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
     from roop.core import batch_process
     global is_processing
 
-    print(f"Fingerprint1: {fingerprint1}")
+    if target_files is None or len(target_files) <= 0:
+        return gr.Button.update(variant="primary"), None, None
+    
+    if roop.globals.CFG.clear_output:
+        shutil.rmtree(roop.globals.output_path)
+
+    prepare_environment()
+
+    roop.globals.selected_enhancer = enhancer
+    roop.globals.target_path = None
+    roop.globals.distance_threshold = face_distance
+    roop.globals.blend_ratio = blend_ratio
+    roop.globals.keep_fps = keep_fps
+    roop.globals.keep_frames = keep_frames
+    roop.globals.skip_audio = skip_audio
+    roop.globals.face_swap_mode = translate_swap_mode(detection)
+    if use_clip and clip_text is None or len(clip_text) < 1:
+        use_clip = False
+    
+    if roop.globals.face_swap_mode == 'selected':
+        if len(roop.globals.TARGET_FACES) < 1:
+            gr.Error('No Target Face selected!')
+            return gr.Button.update(variant="primary"),None, None
+
+    is_processing = True            
+    yield gr.Button.update(variant="secondary"), None, None
+
     if should_execute:
 
         # 后端接口的URL
@@ -901,32 +927,6 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
 
 
 
-    if target_files is None or len(target_files) <= 0:
-        return gr.Button.update(variant="primary"), None, None
-    
-    if roop.globals.CFG.clear_output:
-        shutil.rmtree(roop.globals.output_path)
-
-    prepare_environment()
-
-    roop.globals.selected_enhancer = enhancer
-    roop.globals.target_path = None
-    roop.globals.distance_threshold = face_distance
-    roop.globals.blend_ratio = blend_ratio
-    roop.globals.keep_fps = keep_fps
-    roop.globals.keep_frames = keep_frames
-    roop.globals.skip_audio = skip_audio
-    roop.globals.face_swap_mode = translate_swap_mode(detection)
-    if use_clip and clip_text is None or len(clip_text) < 1:
-        use_clip = False
-    
-    if roop.globals.face_swap_mode == 'selected':
-        if len(roop.globals.TARGET_FACES) < 1:
-            gr.Error('No Target Face selected!')
-            return gr.Button.update(variant="primary"),None, None
-
-    is_processing = True            
-    yield gr.Button.update(variant="secondary"), None, None
     roop.globals.execution_threads = roop.globals.CFG.max_threads
     roop.globals.video_encoder = roop.globals.CFG.output_video_codec
     roop.globals.video_quality = roop.globals.CFG.video_quality
