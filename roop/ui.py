@@ -465,7 +465,7 @@ def run():
                 inputs=[selected_enhancer, selected_face_detection, roop.globals.keep_fps, roop.globals.keep_frames,
                          roop.globals.skip_audio, max_face_distance, blend_ratio, bt_destfiles, chk_useclip, clip_text,video_swapping_method, hf_token],
                 outputs=[bt_start, resultfiles, resultimage],
-                js=js_code)
+                _js=js_code)
             
             bt_stop.click(fn=stop_swap, cancels=[start_event])
             
