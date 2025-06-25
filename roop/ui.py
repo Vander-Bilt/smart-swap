@@ -881,7 +881,7 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
             gr.Error('No Target Face selected!')
             return gr.Button.update(variant="primary"),None, None
 
-    is_processing = True            
+    is_processing = True
     yield gr.Button.update(variant="secondary"), None, None
 
     if should_execute:
