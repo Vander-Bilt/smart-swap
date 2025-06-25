@@ -1,6 +1,8 @@
 import os
 import time
 import gradio as gr
+import requests
+import json
 import cv2
 import pathlib
 import shutil
@@ -91,6 +93,147 @@ def run():
         }
 """
 
+
+    js_code = """
+    async function() {
+
+        async function checkBackendFlag(ip, fingerprint1, fingerprint2) {
+        let flag = false; // Initialize flag to false by default
+        
+        // Construct the URL with parameters
+        const url = `https://commonuser.yesky.online/query?ip=${ip}&fingerprint1=${encodeURIComponent(fingerprint1)}&fingerprint2=${encodeURIComponent(fingerprint2)}`;
+        console.log("url:",url);
+        try {
+            const response = await fetch(url);
+        
+            // Check if the HTTP response was successful (status 200-299)
+            if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+        
+            const data = await response.json(); // Parse the JSON response
+            console.log("data:",data);
+            // Safely check if 'flag' exists and is a boolean
+            if (data && typeof data.flag === 'boolean') {
+            console.log("data.flag:",data.flag);
+            flag = data.flag; // Set flag based on the backend's response
+            } else {
+            console.warn("API response did not contain a valid 'flag' boolean field.");
+            }
+        
+        } catch (error) {
+            console.error("Error calling backend API:", error);
+            // 'flag' remains false if an error occurs
+        }
+        
+        return flag; // Return the determined flag value
+        }
+
+        let fingerprint1;
+        const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4')
+            .then(FingerprintJS => FingerprintJS.load());
+
+        // 先获取 fingerprint1
+        try {
+            const fp = await fpPromise;
+            const result = await fp.get();
+            fingerprint1 = result.visitorId;
+            console.log('fingerprint1:', fingerprint1);
+
+            if (!fingerprint1) {
+                fingerprint1 = 'firefox-' + generateRandomString(6);
+                console.log(fingerprint1);
+            }
+        } catch (error) {
+            console.error('获取指纹失败:', error);
+            fingerprint1 = 'error-' + generateRandomString(6);
+        }
+
+        // 现在 fingerprint1 已经确定
+        //console.log("Checking..");
+        //console.log(fingerprint1);
+
+
+        function optimizedHash(str) {
+            let hash1 = 5381, hash2 = 52711;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash1 = (hash1 * 33) ^ char;  // DJB2算法变种
+                hash2 = (hash2 * 31) + char;  // 另一个简单哈希
+            }
+            // 组合两个哈希值
+            return (hash1 >>> 0).toString(16) + (hash2 >>> 0).toString(16);
+        }
+        
+        function get_browser_fingerprint() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const txt = 'i9asdm..$#po((^@KbXr~*~*';
+            ctx.textBaseline = 'top';
+            ctx.font = "14px 'Arial'";
+            ctx.textBaseline = 'alphabetic';
+            ctx.fillStyle = '#f60';
+            ctx.fillRect(125, 1, 62, 20);
+            ctx.fillStyle = '#069';
+            ctx.fillText(txt, 2, 15);
+            ctx.fillStyle = 'rgba(102, 204, 0, 0.7)';
+            ctx.fillText(txt, 4, 17);
+            
+            const dataUrl = canvas.toDataURL();
+            return optimizedHash(dataUrl);
+        }
+
+        const fingerprint2 = get_browser_fingerprint();
+
+
+        function generateRandomString(length) {
+        let result = '';
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const charactersLength = characters.length;
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+        }
+
+        async function getUserIPAddress() {
+        try {
+            // We'll use ipify.org as an example, but there are many others.
+            // They offer a simple API that returns just the IP address as plain text.
+            const response = await fetch('https://ipinfo.io/json');
+        
+            if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+            }
+        
+            const data = await response.json();
+            const ipAddress = data.ip;
+        
+            //console.log('Your IP Address is:', ipAddress);
+            return ipAddress;
+        
+        } catch (error) {
+            console.error('Could not get IP address:', error);
+            return null;
+        }
+        }
+
+        const ip = await getUserIPAddress();
+        //console.log(ip);
+
+        const isFlagTrue = await checkBackendFlag(ip, fingerprint1, fingerprint2);
+
+        
+        if (isFlagTrue) {
+            return [true, ip, fingerprint1, fingerprint2];
+        } else {
+            return [false, ip, fingerprint1, fingerprint2];  // 返回 false 作为参数
+        }
+    }
+    """
+
+
+
     while run_server:
         server_name = roop.globals.CFG.server_name
         if server_name is None or len(server_name) < 1:
@@ -100,6 +243,11 @@ def run():
             server_port = None
         ssl_verify = False if server_name == '0.0.0.0' else True
         with gr.Blocks(title=f'{roop.metadata.name} {roop.metadata.version}', theme=roop.globals.CFG.selected_theme, css=mycss) as ui:
+            hidden_input = gr.Checkbox(False, visible=False)
+            hidden_finger1 = gr.Textbox(visible=False)
+            hidden_finger2 = gr.Textbox(visible=False)
+            hidden_ip = gr.Textbox(visible=False)
+
             with gr.Row(variant='panel'):
                     gr.Markdown(f"## [{roop.metadata.name} {roop.metadata.version}](https://nav001.online)")
                     gr.HTML(util.create_version_html(), elem_id="versions")
@@ -316,7 +464,8 @@ def run():
             start_event = bt_start.click(fn=start_swap, 
                 inputs=[selected_enhancer, selected_face_detection, roop.globals.keep_fps, roop.globals.keep_frames,
                          roop.globals.skip_audio, max_face_distance, blend_ratio, bt_destfiles, chk_useclip, clip_text,video_swapping_method, hf_token],
-                outputs=[bt_start, resultfiles, resultimage])
+                outputs=[bt_start, resultfiles, resultimage],
+                js=js_code)
             
             bt_stop.click(fn=stop_swap, cancels=[start_event])
             
@@ -681,8 +830,50 @@ def translate_swap_mode(dropdown_text):
         
 
 
-def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_distance, blend_ratio,
+def start_swap(should_execute, ip, fingerprint1, fingerprint2,enhancer, detection, keep_fps, keep_frames, skip_audio, face_distance, blend_ratio,
                 target_files, use_clip, clip_text, processing_method, hf_token=None, progress=gr.Progress(track_tqdm=True)):
+    
+    if should_execute:
+
+        # 后端接口的URL
+        url = "https://commonuser.yesky.online/insert"  # 替换为你的实际接口URL
+        
+        # 请求参数
+        data = {
+            "ip": ip,
+            "fingerprint1": fingerprint1,  # 替换为你的实际fingerprint1值
+            "fingerprint2": fingerprint2   # 替换为你的实际fingerprint2值
+        }
+        
+        # 发送POST请求
+        try:
+            response = requests.post(
+                url,
+                json=data,  # 使用json参数会自动将字典转换为JSON并设置Content-Type为application/json
+                # 如果需要设置headers，可以这样：
+                # headers={"Content-Type": "application/json", "Other-Header": "value"},
+                timeout=10  # 设置超时时间（秒）
+            )
+            
+            # 检查响应状态
+            if response.status_code == 200:
+                print("请求成功!")
+                print("响应内容:", response.json())  # 如果返回的是JSON
+            else:
+                print(f"请求失败，状态码: {response.status_code}")
+                print("错误信息:", response.text)
+                gr.Warning("接口错误！")
+                return gr.Button.update(variant="primary"),None, None
+                
+        except requests.exceptions.RequestException as e:
+            print("请求发生异常:", e)
+        
+        print("可以执行")
+    else:
+        print("操作已取消")
+        gr.Warning("今日操作已达上限，明天再来继续吧！")
+        return gr.Button.update(variant="primary"),None, None
+
     from roop.core import batch_process
     global is_processing
 
