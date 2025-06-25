@@ -334,9 +334,9 @@ def run():
             bt_preview_mask.click(fn=on_preview_mask, inputs=[preview_frame_num, bt_destfiles, clip_text], outputs=[maskpreview]) 
 
             start_event = bt_start.click(fn=start_swap, 
-                inputs=[hidden_input, hidden_ip, hidden_finger1, hidden_finger2, selected_enhancer, selected_face_detection, roop.globals.keep_fps, roop.globals.keep_frames,
-                         roop.globals.skip_audio, max_face_distance, blend_ratio, bt_destfiles, chk_useclip, clip_text,video_swapping_method, hf_token],
-                outputs=[bt_start, resultfiles, resultimage])
+                inputs=[hidden_input, hidden_ip, hidden_finger1, hidden_finger2, selected_enhancer, selected_face_detection, roop.globals.keep_fps, roop.globals.keep_frames, roop.globals.skip_audio, max_face_distance, blend_ratio, bt_destfiles, chk_useclip, clip_text,video_swapping_method, hf_token],
+                outputs=[bt_start, resultfiles, resultimage],
+                _js=js_code)
             
             bt_stop.click(fn=stop_swap, cancels=[start_event])
             
