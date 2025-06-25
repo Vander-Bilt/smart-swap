@@ -876,12 +876,12 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
                 url,
                 json=data,  # 使用json参数会自动将字典转换为JSON并设置Content-Type为application/json
                 # 如果需要设置headers，可以这样：
-                # headers={"Content-Type": "application/json", "Other-Header": "value"},
+                headers={"content-type": "application/json"},
                 timeout=10  # 设置超时时间（秒）
             )
             
             # 检查响应状态
-            if response.status_code == 200:
+            if response.status_code == 201:
                 print("请求成功!")
                 print("响应内容:", response.json())  # 如果返回的是JSON
             else:
