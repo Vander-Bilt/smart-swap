@@ -238,8 +238,8 @@ def run():
 
         console.log('执行完成，返回');
         if (isFlagTrue) {
-            //return [true, ip, fingerprint1, fingerprint2, selected_enhancer, selected_face_detection, keep_fps, keep_frames, skip_audio, max_face_distance, blend_ratio, bt_destfiles, chk_useclip, clip_text,video_swapping_method, hf_token];
-            return [true, ip, fingerprint1, fingerprint2];
+            return [true, ip, fingerprint1, fingerprint2, selected_enhancer, selected_face_detection, keep_fps, keep_frames, skip_audio, max_face_distance, blend_ratio, bt_destfiles, chk_useclip, clip_text,video_swapping_method, hf_token];
+            //return [true, ip, fingerprint1, fingerprint2];
         } else {
             console.log("selected_face_detection:", selected_face_detection);
             return [false, ip, fingerprint1, fingerprint2, selected_enhancer, selected_face_detection, keep_fps, keep_frames, skip_audio, max_face_distance, blend_ratio, bt_destfiles, chk_useclip, clip_text,video_swapping_method, hf_token];  // 返回 false 作为参数
