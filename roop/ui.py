@@ -95,7 +95,7 @@ def run():
 
 
     js_code = """
-    async function(selected_enhancer, selected_face_detection, keep_fps, keep_frames, max_face_distance, blend_ratio, bt_destfiles) {
+    async function(selected_enhancer, selected_face_detection, keep_fps, keep_frames, skip_audio, max_face_distance, blend_ratio, bt_destfiles, chk_useclip, clip_text,video_swapping_method, hf_token) {
         console.log('按钮点击，JS函数执行中...');
         console.log('selected_enhancer:', selected_enhancer);
         console.log('selected_face_detection:', selected_face_detection);
@@ -234,14 +234,8 @@ def run():
         const isFlagTrue = await checkBackendFlag(ip, fingerprint1, fingerprint2);
 
         console.log('执行完成，返回');
-        if (isFlagTrue) {
-            //return [true, ip, fingerprint1, fingerprint2, selected_enhancer, selected_face_detection, keep_fps, keep_frames, skip_audio, max_face_distance, blend_ratio, bt_destfiles, chk_useclip, clip_text,video_swapping_method, hf_token];
-            return [selected_enhancer, selected_face_detection, keep_fps, keep_frames, max_face_distance, blend_ratio, bt_destfiles, true, ip, fingerprint1, fingerprint2];
-        } else {
-            console.log("selected_face_detection:", selected_face_detection);
-            return [selected_enhancer, selected_face_detection, keep_fps, keep_frames, skip_audio, max_face_distance, blend_ratio, bt_destfiles, chk_useclip, clip_text,video_swapping_method, hf_token];  // 返回 false 作为参数
-            //return [false, ip, fingerprint1, fingerprint2, selected_enhancer, selected_face_detection, keep_fps];  // 返回 false 作为参数
-        }
+        return [selected_enhancer, selected_face_detection, keep_fps, keep_frames, skip_audio, max_face_distance, blend_ratio, bt_destfiles, chk_useclip, clip_text,video_swapping_method, hf_token, isFlagTrue, ip, fingerprint1, fingerprint2];
+
     }
     """
 
@@ -475,10 +469,11 @@ def run():
 
             bt_preview_mask.click(fn=on_preview_mask, inputs=[preview_frame_num, bt_destfiles, clip_text], outputs=[maskpreview]) 
 
-            start_event = bt_start.click(fn=start_swap2, 
-                # inputs=[hidden_input, hidden_ip, hidden_finger1, hidden_finger2, selected_enhancer, selected_face_detection, roop.globals.keep_fps, roop.globals.keep_frames,
-                #          roop.globals.skip_audio, max_face_distance, blend_ratio, bt_destfiles, chk_useclip, clip_text,video_swapping_method, hf_token],
-                inputs=[selected_enhancer, selected_face_detection, roop.globals.keep_fps, roop.globals.keep_frames, max_face_distance, blend_ratio, bt_destfiles, hidden_input, hidden_ip, hidden_finger1, hidden_finger2],
+            start_event = bt_start.click(fn=start_swap, 
+                inputs=[selected_enhancer, selected_face_detection, roop.globals.keep_fps, roop.globals.keep_frames,
+                         roop.globals.skip_audio, max_face_distance, blend_ratio, bt_destfiles, chk_useclip, clip_text,video_swapping_method, hf_token, 
+                         hidden_input, hidden_ip, hidden_finger1, hidden_finger2],
+                # inputs=[selected_enhancer, selected_face_detection, roop.globals.keep_fps, roop.globals.keep_frames, max_face_distance, blend_ratio, bt_destfiles, hidden_input, hidden_ip, hidden_finger1, hidden_finger2],
                 outputs=[bt_start, resultfiles, resultimage],
                 _js=js_code)
             
@@ -856,8 +851,9 @@ def start_swap2(enhancer, detection, keep_fps, keep_frames, face_distance, blend
     return gr.Button.update(variant="primary"),None, None
     
 
-def start_swap(should_execute, ip, fingerprint1, fingerprint2, enhancer, detection, keep_fps, keep_frames, skip_audio, face_distance, blend_ratio,
-                target_files, use_clip, clip_text, processing_method, hf_token=None, progress=gr.Progress(track_tqdm=True)):
+def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_distance, blend_ratio,
+                target_files, use_clip, clip_text, processing_method, hf_token,
+                should_execute, ip, fingerprint1, fingerprint2, progress=gr.Progress(track_tqdm=True)):
     from roop.core import batch_process
     global is_processing
 
