@@ -96,9 +96,9 @@ def run():
 
     js_code = """
     async function(selected_enhancer, selected_face_detection, roop.globals.keep_fps, roop.globals.keep_frames, roop.globals.skip_audio, max_face_distance, blend_ratio, bt_destfiles, chk_useclip, clip_text,video_swapping_method, hf_token) {
-        ip = '11.7.156.8';
-        fingerprint1 = 'adfasfadsfasd';
-        fingerprint2 = 'hy6hnnngnbgnbvbv';
+        let ip = '11.7.156.8';
+        let fingerprint1 = 'adfasfadsfasd';
+        let fingerprint2 = 'hy6hnnngnbgnbvbv';
         return [true, ip, fingerprint1, fingerprint2, selected_enhancer, selected_face_detection, roop.globals.keep_fps, roop.globals.keep_frames, roop.globals.skip_audio, max_face_distance, blend_ratio, bt_destfiles, chk_useclip, clip_text,video_swapping_method, hf_token];
     }
     """
