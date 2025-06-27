@@ -480,7 +480,7 @@ def run():
 
             bt_preview_mask.click(fn=on_preview_mask, inputs=[preview_frame_num, bt_destfiles, clip_text], outputs=[maskpreview]) 
 
-            start_event = bt_start.click(fn=start_swap, 
+            start_event = bt_start.click(fn=start_swap2, 
                 inputs=[selected_enhancer, selected_face_detection, roop.globals.keep_fps, roop.globals.keep_frames,
                          roop.globals.skip_audio, max_face_distance, blend_ratio, bt_destfiles, chk_useclip, clip_text,video_swapping_method, hf_token, 
                          hidden_input, hidden_ip, hidden_finger1, hidden_finger2],
@@ -848,6 +848,16 @@ def translate_swap_mode(dropdown_text):
         return "all_male"
     
     return "all"
+
+def start_swap2(enhancer, detection, keep_fps, keep_frames, skip_audio, face_distance, blend_ratio,
+                target_files, use_clip, clip_text, processing_method, hf_token,
+                should_execute, ip, fingerprint1, fingerprint2, progress=gr.Progress(track_tqdm=True)):
+    gr.Info("今日操作已达上限，明天再来继续吧！")
+    
+    time.sleep(3)
+
+    return gr.Button.update(variant="primary"),None, None
+
 
 def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_distance, blend_ratio,
                 target_files, use_clip, clip_text, processing_method, hf_token,
