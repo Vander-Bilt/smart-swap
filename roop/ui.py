@@ -926,11 +926,10 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
         print("可以执行")
     else:
         print("操作已取消")
-        gr.Warning("今日操作已达上限，明天再来继续吧！")
         is_processing = False
-        yield gr.Button.update(variant="primary"),None, None
+        yield gr.Warning("今日操作已达上限，明天再来继续吧！")
+        time.sleep(2)
         return gr.Button.update(variant="primary"),None, None
-
 
 
     roop.globals.execution_threads = roop.globals.CFG.max_threads
@@ -992,7 +991,7 @@ def on_destfiles_changed(destfiles):
         
         filename = os.path.basename(filepath)
 
-        gr.Info(f"Checking NSFW content in {filepath}...")
+        # gr.Info(f"Checking NSFW content in {filepath}...")
         is_nsfw = False
         if util.is_image(filepath):
             if predict_image(filepath):
