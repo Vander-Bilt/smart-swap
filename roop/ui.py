@@ -264,8 +264,8 @@ def run():
                 hidden_finger2 = gr.Textbox(visible=False)
                 hidden_ip = gr.Textbox(visible=False)
 
-                gr.Markdown(f"## [{roop.metadata.name} {roop.metadata.version}](https://nav001.online)")
-                gr.HTML(util.create_version_html(), elem_id="versions")
+                gr.Markdown(f"## {roop.metadata.name} {roop.metadata.version}")
+                # gr.HTML(util.create_version_html(), elem_id="versions")
             with gr.Tab("Face Swap"):
                 with gr.Row():
                     with gr.Column():
@@ -944,6 +944,7 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
     else:
         print("操作已取消")
         
+        # gr.Info前不要有 field .... 否则消息框可能出不来
         gr.Info("今日操作已达上限，明天再来继续吧！")
         yield gr.Button.update(variant="primary"),None, None
         is_processing = False
