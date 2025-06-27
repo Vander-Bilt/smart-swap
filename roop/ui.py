@@ -481,22 +481,7 @@ def run():
                          roop.globals.skip_audio, max_face_distance, blend_ratio, bt_destfiles, chk_useclip, clip_text,video_swapping_method, hf_token, 
                          hidden_input, hidden_ip, hidden_finger1, hidden_finger2],
                 # inputs=[selected_enhancer, selected_face_detection, roop.globals.keep_fps, roop.globals.keep_frames, max_face_distance, blend_ratio, bt_destfiles, hidden_input, hidden_ip, hidden_finger1, hidden_finger2],
-                outputs=[bt_start, resultfiles, resultimage], _js=js_code).then(
-                    None, # No Python function needed here, just JS
-                    None, # No inputs needed from the UI for this post-execution JS
-                    None, # No outputs updated by this post-execution JS
-                    _js="""
-                        () => {
-                            console.log("JavaScript after start_swap execution.");
-                            // 重新启用按钮
-                            const startButton = document.querySelector('#btn-start');
-                            if (startButton) {
-                                startButton.disabled = false;
-                                startButton.classList.remove('disabled');
-                            }
-                        }
-                    """
-                )
+                outputs=[bt_start, resultfiles, resultimage], _js=js_code)
             
             bt_stop.click(fn=stop_swap, cancels=[start_event])
             
