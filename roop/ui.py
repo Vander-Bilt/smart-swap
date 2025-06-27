@@ -96,6 +96,12 @@ def run():
 
     js_code = """
     async function(selected_enhancer, selected_face_detection, keep_fps, keep_frames, skip_audio, max_face_distance, blend_ratio, bt_destfiles, chk_useclip, clip_text,video_swapping_method, hf_token) {
+        // 获取开始按钮元素并禁用它
+        const startButton = document.querySelector('#btn-start');
+        if (startButton) {
+            startButton.disabled = true;
+            startButton.classList.add('disabled');
+        }
         console.log('按钮点击，JS函数执行中...');
         console.log('selected_enhancer:', selected_enhancer);
         console.log('selected_face_detection:', selected_face_detection);
@@ -234,6 +240,11 @@ def run():
         const isFlagTrue = await checkBackendFlag(ip, fingerprint1, fingerprint2);
 
         console.log('执行完成，返回');
+        // 重新启用按钮
+        if (startButton) {
+            startButton.disabled = false;
+            startButton.classList.remove('disabled');
+        }
         return [selected_enhancer, selected_face_detection, keep_fps, keep_frames, skip_audio, max_face_distance, blend_ratio, bt_destfiles, chk_useclip, clip_text,video_swapping_method, hf_token, isFlagTrue, ip, fingerprint1, fingerprint2];
 
     }
@@ -332,7 +343,7 @@ def run():
                 
                 with gr.Row(variant='panel'):
                     with gr.Column():
-                        bt_start = gr.Button("Start", variant='primary')
+                        bt_start = gr.Button("Start", variant='primary', elem_id='btn-start')
                     with gr.Column():
                         bt_stop = gr.Button("Stop", variant='secondary')
                     with gr.Column():
@@ -837,19 +848,6 @@ def translate_swap_mode(dropdown_text):
         return "all_male"
     
     return "all"
-        
-def start_swap2(enhancer, detection, keep_fps, keep_frames, face_distance, blend_ratio, target_files, should_execute, ip, fingerprint1, fingerprint2):
-    print(f"Fingerprint1: {fingerprint1}")
-    print(f"Fingerprint2: {fingerprint2}")
-    # print(f"skip_audio: {skip_audio}")
-    print(f"face_distance: {face_distance}")
-    print(f"blend_ratio: {blend_ratio}")
-    print(f"target_files: {target_files}")
-    # print(f"use_clip: {use_clip}")
-    # print(f"clip_text: {clip_text}") What is this?
-
-    return gr.Button.update(variant="primary"),None, None
-    
 
 def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_distance, blend_ratio,
                 target_files, use_clip, clip_text, processing_method, hf_token,
