@@ -853,7 +853,7 @@ def start_swap2(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dis
                 should_execute, ip, fingerprint1, fingerprint2, progress=gr.Progress(track_tqdm=True)):
     gr.Info("今日操作已达上限，明天再来继续吧！")
     
-    time.sleep(3)
+    time.sleep(10)
 
     return gr.Button.update(variant="primary"),None, None
 
