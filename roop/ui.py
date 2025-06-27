@@ -855,6 +855,8 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
     from roop.core import batch_process
     global is_processing
 
+    yield gr.Button.update(variant="secondary"), None, None
+
     if target_files is None or len(target_files) <= 0:
         return gr.Button.update(variant="primary"), None, None
     
@@ -880,7 +882,7 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
             return gr.Button.update(variant="primary"),None, None
 
     is_processing = True
-    yield gr.Button.update(variant="secondary"), None, None
+    # yield gr.Button.update(variant="secondary"), None, None
 
     if should_execute:
 
@@ -912,15 +914,19 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
                 print(f"请求失败，状态码: {response.status_code}")
                 print("错误信息:", response.text)
                 gr.Warning("接口错误！")
+                is_processing = False
                 return gr.Button.update(variant="primary"),None, None
                 
         except requests.exceptions.RequestException as e:
             print("请求发生异常:", e)
+            is_processing = False
+            return gr.Button.update(variant="primary"),None, None
         
         print("可以执行")
     else:
         print("操作已取消")
         gr.Warning("今日操作已达上限，明天再来继续吧！")
+        is_processing = False
         return gr.Button.update(variant="primary"),None, None
 
 
