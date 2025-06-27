@@ -861,7 +861,7 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
                 should_execute, ip, fingerprint1, fingerprint2, progress=gr.Progress(track_tqdm=True)):
     
     
-    yield gr.Button.update(variant="secondary"), None, None
+    # yield gr.Button.update(variant="secondary"), None, None
 
     from roop.core import batch_process
     global is_processing
@@ -891,7 +891,7 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
             gr.Error('No Target Face selected!')
             return gr.Button.update(variant="primary"),None, None
 
-    is_processing = True
+    # is_processing = True
     # yield gr.Button.update(variant="secondary"), None, None
 
     if should_execute:
@@ -938,8 +938,7 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
         
         gr.Info("今日操作已达上限，明天再来继续吧！")
         
-        time.sleep(3)
-        is_processing = False
+        # is_processing = False
         return gr.Button.update(variant="primary"),None, None
 
 
