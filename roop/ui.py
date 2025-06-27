@@ -927,7 +927,7 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
         
         print("可以执行")
     else:
-        print("操作已取消")
+        # print("操作已取消")
         
         gr.Info("今日操作已达上限，明天再来继续吧！")
         
@@ -936,7 +936,7 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
         return gr.Button.update(variant="primary"),None, None
 
 
-    print("Continued?")
+    # print("Continued?")
     roop.globals.execution_threads = roop.globals.CFG.max_threads
     roop.globals.video_encoder = roop.globals.CFG.output_video_codec
     roop.globals.video_quality = roop.globals.CFG.video_quality
