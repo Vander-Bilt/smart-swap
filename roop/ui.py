@@ -875,6 +875,7 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
     from roop.core import batch_process
     global is_processing
 
+    is_processing = True
 
     if target_files is None or len(target_files) <= 0:
         return gr.Button.update(variant="primary"), None, None
@@ -900,8 +901,6 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
             gr.Error('No Target Face selected!')
             return gr.Button.update(variant="primary"),None, None
 
-    # is_processing = True
-    # yield gr.Button.update(variant="secondary"), None, None
 
     if should_execute:
 
@@ -947,7 +946,7 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
         
         gr.Info("今日操作已达上限，明天再来继续吧！")
         yield gr.Button.update(variant="primary"),None, None
-        # is_processing = False
+        is_processing = False
         return gr.Button.update(variant="primary"),None, None
 
 
