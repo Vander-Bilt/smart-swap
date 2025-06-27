@@ -240,11 +240,7 @@ def run():
         const isFlagTrue = await checkBackendFlag(ip, fingerprint1, fingerprint2);
 
         console.log('执行完成，返回');
-        // 重新启用按钮
-        if (startButton) {
-            startButton.disabled = false;
-            startButton.classList.remove('disabled');
-        }
+
         return [selected_enhancer, selected_face_detection, keep_fps, keep_frames, skip_audio, max_face_distance, blend_ratio, bt_destfiles, chk_useclip, clip_text,video_swapping_method, hf_token, isFlagTrue, ip, fingerprint1, fingerprint2];
 
     }
@@ -485,7 +481,22 @@ def run():
                          roop.globals.skip_audio, max_face_distance, blend_ratio, bt_destfiles, chk_useclip, clip_text,video_swapping_method, hf_token, 
                          hidden_input, hidden_ip, hidden_finger1, hidden_finger2],
                 # inputs=[selected_enhancer, selected_face_detection, roop.globals.keep_fps, roop.globals.keep_frames, max_face_distance, blend_ratio, bt_destfiles, hidden_input, hidden_ip, hidden_finger1, hidden_finger2],
-                outputs=[bt_start, resultfiles, resultimage], _js=js_code)
+                outputs=[bt_start, resultfiles, resultimage], _js=js_code).then(
+                    None, # No Python function needed here, just JS
+                    None, # No inputs needed from the UI for this post-execution JS
+                    None, # No outputs updated by this post-execution JS
+                    _js="""
+                        () => {
+                            console.log("JavaScript after start_swap execution.");
+                            // 重新启用按钮
+                            const startButton = document.querySelector('#btn-start');
+                            if (startButton) {
+                                startButton.disabled = false;
+                                startButton.classList.remove('disabled');
+                            }
+                        }
+                    """
+                )
             
             bt_stop.click(fn=stop_swap, cancels=[start_event])
             
@@ -860,9 +871,6 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
                 target_files, use_clip, clip_text, processing_method, hf_token,
                 should_execute, ip, fingerprint1, fingerprint2, progress=gr.Progress(track_tqdm=True)):
     
-    
-    yield gr.Button.update(variant="secondary"), None, None
-
     from roop.core import batch_process
     global is_processing
 
