@@ -929,9 +929,10 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
         is_processing = False
         gr.Warning("今日操作已达上限，明天再来继续吧！")
         time.sleep(10)
-        return gr.Button.update(variant="primary"),None, None
+        yield gr.Button.update(variant="primary"),None, None
 
 
+    print("Continued?")
     roop.globals.execution_threads = roop.globals.CFG.max_threads
     roop.globals.video_encoder = roop.globals.CFG.output_video_codec
     roop.globals.video_quality = roop.globals.CFG.video_quality
