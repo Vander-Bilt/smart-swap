@@ -930,10 +930,12 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
         print("可以执行")
     else:
         print("操作已取消")
-        is_processing = False
+        
         gr.Warning("今日操作已达上限，明天再来继续吧！")
+        
         time.sleep(10)
-        yield gr.Button.update(variant="primary"),None, None
+        is_processing = False
+        return gr.Button.update(variant="primary"),None, None
 
 
     print("Continued?")
