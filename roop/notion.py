@@ -75,7 +75,7 @@ def delete_all_records():
             archive_record(page_id)
         print("所有现有记录已归档。")
 
-def add_record_to_notion_database(url):
+def add_record_to_notion_database(url, username):
     """
     向 Notion 数据库插入一条新记录。
 
@@ -96,6 +96,13 @@ def add_record_to_notion_database(url):
                 },
                 "地址": {
                     "url": url # <<--- 传递一个简单的 URL 字符串
+                },
+                "SVR": { # 这是你数据库中名为 "Content" 的 Text 属性
+                    "rich_text": [ # 必须是 "rich_text"
+                        {
+                            "text": {"content": username} # "text" 在 "rich_text" 列表的内部
+                        }
+                    ]
                 },
                 # 根据你的数据库结构添加更多属性
             },

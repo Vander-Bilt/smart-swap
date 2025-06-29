@@ -536,13 +536,13 @@ def run():
         try:
             print("Lets do it...")
             app, local_url, share_url = ui.queue().launch(inbrowser=True, server_name=server_name, server_port=server_port, share=roop.globals.CFG.server_share, ssl_verify=ssl_verify, prevent_thread_lock=True, show_error=True)
-            print("Can see me?")
+            print(f"Can see me? username: {roop.globals.username}")
             print(roop.globals.CFG.reg_notion)
             print(f"Got share url: {share_url}")
             if roop.globals.CFG.reg_notion:
                 print("Register notion")
                 #notion.delete_all_records()
-                notion.add_record_to_notion_database(share_url)
+                notion.add_record_to_notion_database(share_url, roop.globals.username)
             
         except:
             print("Got error")
