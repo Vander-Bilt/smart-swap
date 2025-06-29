@@ -59,7 +59,6 @@ def parse_args() -> None:
     program.add_argument('--execution-provider', help='available execution provider (choices: cpu, ...)', dest='execution_provider', default=['cpu'], choices=suggest_execution_providers(), nargs='+')
     program.add_argument('--execution-threads', help='number of execution threads', dest='execution_threads', type=int, default=suggest_execution_threads())
     program.add_argument('-v', '--version', action='version', version=f'{roop.metadata.name} {roop.metadata.version}')
-    program.add_argument('--username', help='kaggle username', dest='username', type=str, default='')
 
     args = program.parse_args()
 
@@ -85,7 +84,6 @@ def parse_args() -> None:
     roop.globals.max_memory = args.max_memory
     roop.globals.execution_providers = decode_execution_providers(args.execution_provider)
     roop.globals.execution_threads = args.execution_threads
-    roop.globals.username = args.username
 
 
 def encode_execution_providers(execution_providers: List[str]) -> List[str]:
