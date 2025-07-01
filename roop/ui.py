@@ -1028,6 +1028,7 @@ def on_destfiles_changed(destfiles):
 
     if len(destfiles) > 5:
         gr.Info(f"You can upload up to 5 files at a time. If you have more needs, please contact the blogger.")
+        return gr.Files.update(value=destfiles), gr.Slider.update(value=0, maximum=0, interactive=False)
 
     nsfw_detected_and_removed = False
     for file_obj in destfiles:
