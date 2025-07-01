@@ -878,7 +878,10 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
         yield gr.Button.update(variant="primary"), [], gr.Image.update(value=None)
         return
     
-    # print("Testing")
+    if len(target_files) > roop.globals.CFG.num_limit_targets:
+        gr.Warning(f"You can upload up to {roop.globals.CFG.num_limit_targets} files at a time. If you have more needs, please contact the blogger.")   
+        yield gr.Button.update(variant="primary"), [], gr.Image.update(value=None)
+        return
 
     from roop.core import batch_process
     global is_processing
@@ -1008,8 +1011,8 @@ def on_destfiles_changed(destfiles):
     if destfiles is None or len(destfiles) < 1:
         return gr.Slider.update(value=0, maximum=0)
 
-    if len(destfiles) > 5:
-        gr.Info(f"You can upload up to 5 files at a time. If you have more needs, please contact the blogger.")
+    if len(destfiles) > roop.globals.CFG.num_limit_targets:
+        gr.Info(f"You can upload up to {roop.globals.CFG.num_limit_targets} files at a time. If you have more needs, please contact the blogger.")
         return gr.Slider.update(value=0, maximum=0, interactive=False)
 
     nsfw_detected_and_removed = False

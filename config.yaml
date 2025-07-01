@@ -10,4 +10,5 @@ server_name: ''
 server_port: 0
 server_share: true
 reg_notion: true
+num_limit_targets: 5
 video_quality: 14
