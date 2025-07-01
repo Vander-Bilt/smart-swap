@@ -460,7 +460,7 @@ def run():
             previewinputs = [preview_frame_num, bt_destfiles, fake_preview, selected_enhancer, selected_face_detection,
                                 max_face_distance, blend_ratio, chk_useclip, clip_text] 
 
-            bt_destfiles.change(fn=on_destfiles_changed, inputs=[bt_destfiles], outputs=[preview_frame_num]).then(fn=on_preview_frame_changed, inputs=previewinputs, outputs=[previewimage])
+            bt_destfiles.change(fn=on_destfiles_changed, inputs=[bt_destfiles], outputs=[bt_destfiles, preview_frame_num]).then(fn=on_preview_frame_changed, inputs=previewinputs, outputs=[previewimage])
             bt_destfiles.select(fn=on_destfiles_selected, inputs=[bt_destfiles], outputs=[preview_frame_num]).then(fn=on_preview_frame_changed, inputs=previewinputs, outputs=[previewimage])
             bt_destfiles.clear(fn=on_clear_destfiles, outputs=[target_faces])
             bt_download_target_url.click(fn=on_download_target_url, inputs=[target_url_input], outputs=[bt_destfiles, preview_frame_num]).then(fn=on_preview_frame_changed, inputs=previewinputs, outputs=[previewimage])
@@ -1024,11 +1024,11 @@ def on_destfiles_changed(destfiles):
     global selected_preview_index
 
     if destfiles is None or len(destfiles) < 1:
-        return gr.Slider.update(value=0, maximum=0)
+        return gr.Files.update(value=[]), gr.Slider.update(value=0, maximum=0)
 
     if len(destfiles) > 5:
         gr.Info(f"You can upload up to 5 files at a time. If you have more needs, please contact the blogger.")
-        return gr.Files.update(value=destfiles), gr.Slider.update(value=0, maximum=0, interactive=False)
+        return gr.Files.update(value=[]), gr.Slider.update(value=0, maximum=0, interactive=False)
 
     nsfw_detected_and_removed = False
     for file_obj in destfiles:
@@ -1061,10 +1061,6 @@ def on_destfiles_changed(destfiles):
     if nsfw_detected_and_removed:
         return gr.Files.update(value=[]), gr.Slider.update(value=0, maximum=0, interactive=False)
 
-
-
-    
-    
     selected_preview_index = 0
     
     # 处理字符串路径或文件对象
@@ -1080,7 +1076,7 @@ def on_destfiles_changed(destfiles):
     else:
         total_frames = 0
     
-    return gr.Slider.update(value=0, maximum=total_frames)
+    return gr.Files.update(), gr.Slider.update(value=0, maximum=total_frames)
 
 
 
