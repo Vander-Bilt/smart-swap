@@ -993,8 +993,8 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
         
     #     yield gr.Button.update(variant="primary"), gr.Files.update(value=outfiles), gr.Image.update(value=outfiles[0])
     # else:
-    #     yield gr.Button.update(variant="primary"), None, None
-    yield gr.Button.update(variant="primary"), None, None
+    #     yield gr.Button.update(variant="primary"), [], None
+    yield gr.Button.update(variant="primary"), [], None
 
 def stop_swap():
     roop.globals.processing = False
