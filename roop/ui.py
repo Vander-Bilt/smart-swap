@@ -877,13 +877,15 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
         gr.Warning("No target files selected!")
         return gr.Button.update(variant="primary"),None, None
     
-    # from roop.core import batch_process
-    # global is_processing
+    print("Testing")
+    
+    from roop.core import batch_process
+    global is_processing
 
     # if target_files is None or len(target_files) <= 0:
     #     return gr.Button.update(variant="primary"), None, None
     
-    # is_processing = True
+    is_processing = True
 
     # if roop.globals.CFG.clear_output:
     #     shutil.rmtree(roop.globals.output_path)
