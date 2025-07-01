@@ -900,7 +900,7 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
 
     if len(target_files) > 5:
         gr.Info(f"You can upload up to 5 files at a time. If you have more needs, please contact the blogger.")
-        return gr.Button.update(variant="primary"), None, None
+        return gr.Button.update(variant="primary"), gr.Files.update(value=[]), gr.Image.update(value=None)
 
 
     is_processing = True
@@ -924,7 +924,7 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
     if roop.globals.face_swap_mode == 'selected':
         if len(roop.globals.TARGET_FACES) < 1:
             gr.Error('No Target Face selected!')
-            return gr.Button.update(variant="primary"),None, None
+            return gr.Button.update(variant="primary"), gr.Files.update(value=[]), gr.Image.update(value=None)
 
 
     if should_execute:
@@ -958,12 +958,12 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
                 print("错误信息:", response.text)
                 gr.Warning("接口错误！")
                 is_processing = False
-                return gr.Button.update(variant="primary"),None, None
+                return gr.Button.update(variant="primary"), gr.Files.update(value=[]), gr.Image.update(value=None)
                 
         except requests.exceptions.RequestException as e:
             print("请求发生异常:", e)
             is_processing = False
-            return gr.Button.update(variant="primary"),None, None
+            return gr.Button.update(variant="primary"), gr.Files.update(value=[]), gr.Image.update(value=None)
         
         print("可以执行")
     else:
@@ -971,9 +971,9 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
         
         # gr.Info前不要有 field .... 否则消息框可能出不来
         gr.Info("今日操作已达上限，明天再来继续吧！")
-        yield gr.Button.update(variant="primary"),None, None
         is_processing = False
-        return gr.Button.update(variant="primary"),None, None
+        yield gr.Button.update(variant="primary"), gr.Files.update(value=[]), gr.Image.update(value=None)
+        return
 
 
     # print("Continued?")
