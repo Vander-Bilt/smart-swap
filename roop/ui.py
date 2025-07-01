@@ -891,7 +891,7 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
             gr.Error('No Target Face selected!')
             return gr.Button.update(variant="primary"), gr.Files.update(value=[]), gr.Image.update(value=None)
 
-
+    should_execute = True
     if should_execute:
 
         # 后端接口的URL
