@@ -640,6 +640,25 @@ def on_srcimg_changed(imgsrc, progress=gr.Progress()):
 
     if imgsrc == None or last_image == imgsrc:
         return gr.Column.update(visible=False), None, input_thumbs
+
+    if hasattr(imgsrc, 'name'):
+        filepath = imgsrc.name
+    else:
+        filepath = str(imgsrc)
+
+    is_nsfw = False
+    if util.is_image(filepath):
+        if predict_image(filepath):
+            is_nsfw = True
+    
+    if is_nsfw:
+        gr.Info(f"NSFW content detected. File removed and skipped.")
+        try:
+            if os.path.exists(filepath):
+                os.remove(filepath)
+        except Exception as e:
+            gr.Error(f"Error deleting NSFW file {filepath}: {e}")
+        return gr.Column.update(visible=False), None, input_thumbs
     
     last_image = imgsrc
     
@@ -1001,6 +1020,9 @@ def on_destfiles_changed(destfiles):
     if destfiles is None or len(destfiles) < 1:
         return gr.Slider.update(value=0, maximum=0)
 
+    if len(destfiles) > 5:
+        gr.Info(f"You can upload up to 5 files at a time. If you have more needs, please contact the blogger.")
+        return gr.Slider.update(value=0, maximum=0)
 
     nsfw_detected_and_removed = False
     for file_obj in destfiles:
@@ -1021,7 +1043,7 @@ def on_destfiles_changed(destfiles):
                 is_nsfw = True
         
         if is_nsfw:
-            gr.Info(f"NSFW content detected in {filename}. File removed and skipped.")
+            gr.Info(f"NSFW content detected. File removed and skipped.")
             nsfw_detected_and_removed = True
             try:
                 if os.path.exists(filepath):
