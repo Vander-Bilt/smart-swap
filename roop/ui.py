@@ -1009,9 +1009,9 @@ def on_destfiles_changed(destfiles):
     if destfiles is None or len(destfiles) < 1:
         return gr.Slider.update(value=0, maximum=0)
 
-    if len(destfiles) > 5:
-        gr.Info(f"You can upload up to 5 files at a time. If you have more needs, please contact the blogger.")
-        return gr.Slider.update(value=0, maximum=0, interactive=False)
+    # if len(destfiles) > 5:
+    #     gr.Info(f"You can upload up to 5 files at a time. If you have more needs, please contact the blogger.")
+    #     return gr.Slider.update(value=0, maximum=0, interactive=False)
 
     nsfw_detected_and_removed = False
     for file_obj in destfiles:
