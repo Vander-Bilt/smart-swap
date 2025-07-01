@@ -894,17 +894,16 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
     from roop.core import batch_process
     global is_processing
 
-    is_processing = True
-
     if target_files is None or len(target_files) <= 0:
-        # is_processing = False
         return gr.Button.update(variant="primary"), None, None
     
 
     if len(target_files) > 5:
-        # is_processing = False
         gr.Info(f"You can upload up to 5 files at a time. If you have more needs, please contact the blogger.")
         return gr.Button.update(variant="primary"), None, None
+
+
+    is_processing = True
 
     if roop.globals.CFG.clear_output:
         shutil.rmtree(roop.globals.output_path)
