@@ -873,6 +873,9 @@ def start_swap2(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dis
 def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_distance, blend_ratio,
                 target_files, use_clip, clip_text, processing_method, hf_token,
                 should_execute, ip, fingerprint1, fingerprint2, progress=gr.Progress(track_tqdm=True)):
+    if target_files is None:
+        gr.Warning("No target files selected!")
+        return gr.Button.update(interactive=True), None, None
     
     from roop.core import batch_process
     global is_processing
