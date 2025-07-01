@@ -481,22 +481,7 @@ def run():
                          roop.globals.skip_audio, max_face_distance, blend_ratio, bt_destfiles, chk_useclip, clip_text,video_swapping_method, hf_token, 
                          hidden_input, hidden_ip, hidden_finger1, hidden_finger2],
                 # inputs=[selected_enhancer, selected_face_detection, roop.globals.keep_fps, roop.globals.keep_frames, max_face_distance, blend_ratio, bt_destfiles, hidden_input, hidden_ip, hidden_finger1, hidden_finger2],
-                outputs=[bt_start, resultfiles, resultimage], _js=js_code).then(
-                    None, # No Python function needed here, just JS
-                    None, # No inputs needed from the UI for this post-execution JS
-                    None, # No outputs updated by this post-execution JS
-                    _js="""
-                        () => {
-                            console.log("JavaScript after start_swap execution.");
-                            // 重新启用按钮
-                            const startButton = document.querySelector('#btn-start');
-                            if (startButton) {
-                                startButton.disabled = false;
-                                startButton.classList.remove('disabled');
-                            }
-                        }
-                    """
-                )
+                outputs=[bt_start, resultfiles, resultimage], _js=js_code)
             
             # bt_stop.click(fn=stop_swap, cancels=[start_event])
             bt_stop.click(fn=stop_swap)
@@ -880,12 +865,6 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
     if target_files is None or len(target_files) <= 0:
         return gr.Button.update(variant="primary"), None, None
     
-
-    # if len(target_files) > 5:
-    #     gr.Info(f"You can upload up to 5 files at a time. If you have more needs, please contact the blogger.")
-    #     return gr.Button.update(variant="primary"), gr.Files.update(value=[]), gr.Image.update(value=None)
-
-
     is_processing = True
 
     if roop.globals.CFG.clear_output:
