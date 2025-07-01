@@ -881,9 +881,9 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
         return gr.Button.update(variant="primary"), None, None
     
 
-    if len(target_files) > 5:
-        gr.Info(f"You can upload up to 5 files at a time. If you have more needs, please contact the blogger.")
-        return gr.Button.update(variant="primary"), gr.Files.update(value=[]), gr.Image.update(value=None)
+    # if len(target_files) > 5:
+    #     gr.Info(f"You can upload up to 5 files at a time. If you have more needs, please contact the blogger.")
+    #     return gr.Button.update(variant="primary"), gr.Files.update(value=[]), gr.Image.update(value=None)
 
 
     is_processing = True
@@ -1009,9 +1009,9 @@ def on_destfiles_changed(destfiles):
     if destfiles is None or len(destfiles) < 1:
         return gr.Slider.update(value=0, maximum=0)
 
-    # if len(destfiles) > 5:
-    #     gr.Info(f"You can upload up to 5 files at a time. If you have more needs, please contact the blogger.")
-    #     return gr.Slider.update(value=0, maximum=0, interactive=False)
+    if len(destfiles) > 5:
+        gr.Info(f"You can upload up to 5 files at a time. If you have more needs, please contact the blogger.")
+        return gr.Slider.update(value=0, maximum=0, interactive=False)
 
     nsfw_detected_and_removed = False
     for file_obj in destfiles:
