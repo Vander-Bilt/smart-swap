@@ -460,7 +460,7 @@ def run():
             previewinputs = [preview_frame_num, bt_destfiles, fake_preview, selected_enhancer, selected_face_detection,
                                 max_face_distance, blend_ratio, chk_useclip, clip_text] 
 
-            bt_destfiles.change(fn=on_destfiles_changed, inputs=[bt_destfiles], outputs=[bt_destfiles, preview_frame_num]).then(fn=on_preview_frame_changed, inputs=previewinputs, outputs=[previewimage])
+            bt_destfiles.change(fn=on_destfiles_changed, inputs=[bt_destfiles], outputs=[preview_frame_num]).then(fn=on_preview_frame_changed, inputs=previewinputs, outputs=[previewimage])
             bt_destfiles.select(fn=on_destfiles_selected, inputs=[bt_destfiles], outputs=[preview_frame_num]).then(fn=on_preview_frame_changed, inputs=previewinputs, outputs=[previewimage])
             bt_destfiles.clear(fn=on_clear_destfiles, outputs=[target_faces])
             bt_download_target_url.click(fn=on_download_target_url, inputs=[target_url_input], outputs=[bt_destfiles, preview_frame_num]).then(fn=on_preview_frame_changed, inputs=previewinputs, outputs=[previewimage])
@@ -593,23 +593,6 @@ def on_download_target_url(url_input, progress=gr.Progress()):
 
     if downloaded_file_path:
         RECENT_DIRECTORY_TARGET = download_dir
-        # Simulate the file being selected in bt_destfiles
-        # We need to return a list of file paths for the gr.Files component
-        # And then trigger the subsequent updates for preview
-        # The on_destfiles_changed function expects a list of TemporaryFileWrapper objects
-        # or a list of file paths. Here we provide a list with the single downloaded file path.
-        
-        # Update bt_destfiles with the new file
-        # Gradio's gr.Files component expects a list of file paths or TemporaryFileWrapper objects.
-        # We'll update it with the path of the downloaded file.
-        # It's better to append to existing files if any, or set it if none.
-        # For simplicity here, we'll just set it to the new file.
-        # If you need to append, you'd need to get current bt_destfiles value first.
-        
-        # Trigger on_destfiles_changed which updates preview_frame_num
-        # and then on_preview_frame_changed updates the preview image
-        # The output of this function is directly fed into bt_destfiles and preview_frame_num
-        # So we call on_destfiles_changed manually to get the correct preview_frame_num update
         updated_preview_frame_num_state = on_destfiles_changed([downloaded_file_path])
         return [downloaded_file_path], updated_preview_frame_num_state
     else:
@@ -1024,11 +1007,11 @@ def on_destfiles_changed(destfiles):
     global selected_preview_index
 
     if destfiles is None or len(destfiles) < 1:
-        return gr.Files.update(value=[]), gr.Slider.update(value=0, maximum=0)
+        return gr.Slider.update(value=0, maximum=0)
 
     if len(destfiles) > 5:
         gr.Info(f"You can upload up to 5 files at a time. If you have more needs, please contact the blogger.")
-        return gr.Files.update(value=[]), gr.Slider.update(value=0, maximum=0, interactive=False)
+        return gr.Slider.update(value=0, maximum=0, interactive=False)
 
     nsfw_detected_and_removed = False
     for file_obj in destfiles:
