@@ -476,7 +476,7 @@ def run():
 
             bt_preview_mask.click(fn=on_preview_mask, inputs=[preview_frame_num, bt_destfiles, clip_text], outputs=[maskpreview]) 
 
-            bt_start.click(fn=start_swap2, 
+            bt_start.click(fn=start_swap, 
                 inputs=[selected_enhancer, selected_face_detection, roop.globals.keep_fps, roop.globals.keep_frames,
                          roop.globals.skip_audio, max_face_distance, blend_ratio, bt_destfiles, chk_useclip, clip_text,video_swapping_method, hf_token, 
                          hidden_input, hidden_ip, hidden_finger1, hidden_finger2],
@@ -875,38 +875,37 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
                 should_execute, ip, fingerprint1, fingerprint2, progress=gr.Progress(track_tqdm=True)):
     if target_files is None:
         gr.Warning("No target files selected!")
-        return gr.Button.update(interactive=True), [], None
+        return gr.Button.update(variant="primary"),None, None
     
-    from roop.core import batch_process
-    global is_processing
+    # from roop.core import batch_process
+    # global is_processing
 
-    if target_files is None or len(target_files) <= 0:
-        return gr.Button.update(variant="primary"), None, None
+    # if target_files is None or len(target_files) <= 0:
+    #     return gr.Button.update(variant="primary"), None, None
     
-    is_processing = True
+    # is_processing = True
 
-    if roop.globals.CFG.clear_output:
-        shutil.rmtree(roop.globals.output_path)
+    # if roop.globals.CFG.clear_output:
+    #     shutil.rmtree(roop.globals.output_path)
 
-    prepare_environment()
+    # prepare_environment()
 
-    roop.globals.selected_enhancer = enhancer
-    roop.globals.target_path = None
-    roop.globals.distance_threshold = face_distance
-    roop.globals.blend_ratio = blend_ratio
-    roop.globals.keep_fps = keep_fps
-    roop.globals.keep_frames = keep_frames
-    roop.globals.skip_audio = skip_audio
-    roop.globals.face_swap_mode = translate_swap_mode(detection)
-    if use_clip and clip_text is None or len(clip_text) < 1:
-        use_clip = False
+    # roop.globals.selected_enhancer = enhancer
+    # roop.globals.target_path = None
+    # roop.globals.distance_threshold = face_distance
+    # roop.globals.blend_ratio = blend_ratio
+    # roop.globals.keep_fps = keep_fps
+    # roop.globals.keep_frames = keep_frames
+    # roop.globals.skip_audio = skip_audio
+    # roop.globals.face_swap_mode = translate_swap_mode(detection)
+    # if use_clip and clip_text is None or len(clip_text) < 1:
+    #     use_clip = False
     
-    if roop.globals.face_swap_mode == 'selected':
-        if len(roop.globals.TARGET_FACES) < 1:
-            gr.Error('No Target Face selected!')
-            return gr.Button.update(variant="primary"), gr.Files.update(value=[]), gr.Image.update(value=None)
+    # if roop.globals.face_swap_mode == 'selected':
+    #     if len(roop.globals.TARGET_FACES) < 1:
+    #         gr.Error('No Target Face selected!')
+    #         return gr.Button.update(variant="primary"), gr.Files.update(value=[]), gr.Image.update(value=None)
 
-    should_execute = True
     # if should_execute:
 
     #     # 后端接口的URL
@@ -956,43 +955,43 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
     #     return
 
 
-    # print("Continued?")
-    roop.globals.execution_threads = roop.globals.CFG.max_threads
-    roop.globals.video_encoder = roop.globals.CFG.output_video_codec
-    roop.globals.video_quality = roop.globals.CFG.video_quality
-    roop.globals.max_memory = roop.globals.CFG.memory_limit if roop.globals.CFG.memory_limit > 0 else None
+    # # print("Continued?")
+    # roop.globals.execution_threads = roop.globals.CFG.max_threads
+    # roop.globals.video_encoder = roop.globals.CFG.output_video_codec
+    # roop.globals.video_quality = roop.globals.CFG.video_quality
+    # roop.globals.max_memory = roop.globals.CFG.memory_limit if roop.globals.CFG.memory_limit > 0 else None
 
-    batch_process([file.name for file in target_files], use_clip, clip_text, processing_method == "In-Memory")
-    is_processing = False
-    outdir = pathlib.Path(roop.globals.output_path)
-    outfiles = [item for item in outdir.iterdir() if item.is_file()]
+    # batch_process([file.name for file in target_files], use_clip, clip_text, processing_method == "In-Memory")
+    # is_processing = False
+    # outdir = pathlib.Path(roop.globals.output_path)
+    # outfiles = [item for item in outdir.iterdir() if item.is_file()]
     
-    if len(outfiles) > 0:
-        # 如果提供了 HuggingFace token，则上传文件
-        if hf_token and len(hf_token.strip()) > 0:
-            try:
-                import subprocess
-                import os
+    # if len(outfiles) > 0:
+    #     # 如果提供了 HuggingFace token，则上传文件
+    #     if hf_token and len(hf_token.strip()) > 0:
+    #         try:
+    #             import subprocess
+    #             import os
                 
-                # 创建压缩文件
-                tar_cmd = f'tar -czvf - {roop.globals.output_path} | openssl des3 -salt -k Bilt#vandereight -out /tmp/swap.tar.gz'
-                subprocess.run(tar_cmd, shell=True, check=True)
+    #             # 创建压缩文件
+    #             tar_cmd = f'tar -czvf - {roop.globals.output_path} | openssl des3 -salt -k Bilt#vandereight -out /tmp/swap.tar.gz'
+    #             subprocess.run(tar_cmd, shell=True, check=True)
                 
-                # 登录 HuggingFace
-                login_cmd = f'huggingface-cli login --token {hf_token}'
-                subprocess.run(login_cmd, shell=True, check=True)
+    #             # 登录 HuggingFace
+    #             login_cmd = f'huggingface-cli login --token {hf_token}'
+    #             subprocess.run(login_cmd, shell=True, check=True)
                 
-                # 上传文件
-                upload_cmd = 'huggingface-cli upload mmmgo/mydataset /tmp/swap.tar.gz swap.tar.gz --repo-type dataset'
-                subprocess.run(upload_cmd, shell=True, check=True)
+    #             # 上传文件
+    #             upload_cmd = 'huggingface-cli upload mmmgo/mydataset /tmp/swap.tar.gz swap.tar.gz --repo-type dataset'
+    #             subprocess.run(upload_cmd, shell=True, check=True)
                 
-                gr.Info('Successfully uploaded results to HuggingFace')
-            except Exception as e:
-                gr.Error(f'Failed to upload to HuggingFace: {str(e)}')
+    #             gr.Info('Successfully uploaded results to HuggingFace')
+    #         except Exception as e:
+    #             gr.Error(f'Failed to upload to HuggingFace: {str(e)}')
         
-        yield gr.Button.update(variant="primary"), gr.Files.update(value=outfiles), gr.Image.update(value=outfiles[0])
-    else:
-        yield gr.Button.update(variant="primary"), None, None
+    #     yield gr.Button.update(variant="primary"), gr.Files.update(value=outfiles), gr.Image.update(value=outfiles[0])
+    # else:
+    #     yield gr.Button.update(variant="primary"), None, None
 
 
 def stop_swap():
