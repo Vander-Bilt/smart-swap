@@ -892,53 +892,53 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
             return gr.Button.update(variant="primary"), gr.Files.update(value=[]), gr.Image.update(value=None)
 
     should_execute = True
-    if should_execute:
+    # if should_execute:
 
-        # 后端接口的URL
-        url = "https://commonuser.yesky.online/insert"  # 替换为你的实际接口URL
+    #     # 后端接口的URL
+    #     url = "https://commonuser.yesky.online/insert"  # 替换为你的实际接口URL
         
-        # 请求参数
-        data = {
-            "ip": ip,
-            "fingerprint1": fingerprint1,  # 替换为你的实际fingerprint1值
-            "fingerprint2": fingerprint2   # 替换为你的实际fingerprint2值
-        }
+    #     # 请求参数
+    #     data = {
+    #         "ip": ip,
+    #         "fingerprint1": fingerprint1,  # 替换为你的实际fingerprint1值
+    #         "fingerprint2": fingerprint2   # 替换为你的实际fingerprint2值
+    #     }
         
-        # 发送POST请求
-        try:
-            response = requests.post(
-                url,
-                json=data,  # 使用json参数会自动将字典转换为JSON并设置Content-Type为application/json
-                # 如果需要设置headers，可以这样：
-                headers={"content-type": "application/json"},
-                timeout=10  # 设置超时时间（秒）
-            )
+    #     # 发送POST请求
+    #     try:
+    #         response = requests.post(
+    #             url,
+    #             json=data,  # 使用json参数会自动将字典转换为JSON并设置Content-Type为application/json
+    #             # 如果需要设置headers，可以这样：
+    #             headers={"content-type": "application/json"},
+    #             timeout=10  # 设置超时时间（秒）
+    #         )
             
-            # 检查响应状态
-            if response.status_code == 201:
-                print("请求成功!")
-                print("响应内容:", response.json())  # 如果返回的是JSON
-            else:
-                print(f"请求失败，状态码: {response.status_code}")
-                print("错误信息:", response.text)
-                gr.Warning("接口错误！")
-                is_processing = False
-                return gr.Button.update(variant="primary"), gr.Files.update(value=[]), gr.Image.update(value=None)
+    #         # 检查响应状态
+    #         if response.status_code == 201:
+    #             print("请求成功!")
+    #             print("响应内容:", response.json())  # 如果返回的是JSON
+    #         else:
+    #             print(f"请求失败，状态码: {response.status_code}")
+    #             print("错误信息:", response.text)
+    #             gr.Warning("接口错误！")
+    #             is_processing = False
+    #             return gr.Button.update(variant="primary"), gr.Files.update(value=[]), gr.Image.update(value=None)
                 
-        except requests.exceptions.RequestException as e:
-            print("请求发生异常:", e)
-            is_processing = False
-            return gr.Button.update(variant="primary"), gr.Files.update(value=[]), gr.Image.update(value=None)
+    #     except requests.exceptions.RequestException as e:
+    #         print("请求发生异常:", e)
+    #         is_processing = False
+    #         return gr.Button.update(variant="primary"), gr.Files.update(value=[]), gr.Image.update(value=None)
         
-        print("可以执行")
-    else:
-        print("操作已取消")
+    #     print("可以执行")
+    # else:
+    #     print("操作已取消")
         
-        # gr.Info前不要有 field .... 否则消息框可能出不来
-        gr.Info("今日操作已达上限，明天再来继续吧！")
-        is_processing = False
-        yield gr.Button.update(variant="primary"), gr.Files.update(value=[]), gr.Image.update(value=None)
-        return
+    #     # gr.Info前不要有 field .... 否则消息框可能出不来
+    #     gr.Info("今日操作已达上限，明天再来继续吧！")
+    #     is_processing = False
+    #     yield gr.Button.update(variant="primary"), gr.Files.update(value=[]), gr.Image.update(value=None)
+    #     return
 
 
     # print("Continued?")
