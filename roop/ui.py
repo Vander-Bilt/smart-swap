@@ -874,7 +874,7 @@ def start_swap(enhancer, detection, keep_fps, keep_frames, skip_audio, face_dist
                 target_files, use_clip, clip_text, processing_method, hf_token,
                 should_execute, ip, fingerprint1, fingerprint2, progress=gr.Progress(track_tqdm=True)):
     if target_files is None:
-        gr.Warning("No target files selected!")
+        # gr.Warning("No target files selected!")
         return gr.Button.update(variant="primary"), [], gr.Image.update(value=None)
     
     # print("Testing")
