@@ -1037,7 +1037,7 @@ def on_destfiles_changed(destfiles):
             break
 
     if nsfw_detected_and_removed:
-        return gr.Files.update(value=[]), gr.Slider.update(value=0, maximum=0, interactive=False)
+        return gr.Slider.update(value=0, maximum=0, interactive=False)
 
     selected_preview_index = 0
     
@@ -1054,7 +1054,7 @@ def on_destfiles_changed(destfiles):
     else:
         total_frames = 0
     
-    return gr.Files.update(), gr.Slider.update(value=0, maximum=total_frames)
+    return gr.Slider.update(value=0, maximum=total_frames)
 
 
 
