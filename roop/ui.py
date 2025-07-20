@@ -246,7 +246,10 @@ def run():
     }
     """
 
-
+    ga_script = f"""
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"KsxgdOeqx7UgZNNR",ck:"KsxgdOeqx7UgZNNR"})</script>
+    """
 
     while run_server:
         server_name = roop.globals.CFG.server_name
@@ -259,6 +262,8 @@ def run():
         with gr.Blocks(title=f'{roop.metadata.name} {roop.metadata.version}', theme=roop.globals.CFG.selected_theme, css=mycss) as ui:
 
             with gr.Row(variant='panel'):
+                gr.HTML(ga_script, visible=False) # Keep this component hidden
+
                 hidden_input = gr.Checkbox(False, visible=False)
                 hidden_finger1 = gr.Textbox(visible=False)
                 hidden_finger2 = gr.Textbox(visible=False)
