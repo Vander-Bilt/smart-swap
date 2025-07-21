@@ -247,8 +247,7 @@ def run():
     """
 
     ga_script = f"""
-<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
-<script>LA.init({id:"KsxgdOeqx7UgZNNR",ck:"KsxgdOeqx7UgZNNR"})</script>
+<script charset='UTF-8' id='LA_COLLECT' src='//sdk.51.la/js-sdk-pro.min.js?id=Ksy0eA9xWaipjwOG&ck=Ksy0eA9xWaipjwOG'></script>
     """
 
     while run_server:
@@ -259,10 +258,9 @@ def run():
         if server_port <= 0:
             server_port = None
         ssl_verify = False if server_name == '0.0.0.0' else True
-        with gr.Blocks(title=f'{roop.metadata.name} {roop.metadata.version}', theme=roop.globals.CFG.selected_theme, css=mycss) as ui:
+        with gr.Blocks(title=f'{roop.metadata.name} {roop.metadata.version}', theme=roop.globals.CFG.selected_theme, css=mycss, head=ga_script) as ui:
 
             with gr.Row(variant='panel'):
-                gr.HTML(ga_script, visible=False) # Keep this component hidden
 
                 hidden_input = gr.Checkbox(False, visible=False)
                 hidden_finger1 = gr.Textbox(visible=False)
