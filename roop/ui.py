@@ -247,6 +247,7 @@ def run():
     """
 
     ga_script = f"""
+<script>console.log('Hi Swap');</script>
 <script charset='UTF-8' id='LA_COLLECT' src='//sdk.51.la/js-sdk-pro.min.js?id=Ksy0eA9xWaipjwOG&ck=Ksy0eA9xWaipjwOG'></script>
     """
 
