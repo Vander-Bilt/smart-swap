@@ -302,8 +302,8 @@ def run():
                     with gr.Column():
                         gr.Markdown(
                             """
-                            如果你觉得有所帮助，欢迎支持我们做的更好！ <a href="" target="_blank">支持一下</a><br/>
-                            If you found this useful, your support would be greatly appreciated as we strive to improve! <a href="" target="_blank">Support Us</a>
+                            如果你觉得有所帮助，欢迎支持我们做的更好！ <a href="https://www.notion.so/heng365/215de91f2176810081dde376b1cad4a0" target="_blank">支持一下</a><br/>
+                            If you found this useful, your support would be greatly appreciated as we strive to improve! <a href="https://www.notion.so/heng365/224de91f217681cabb54c124f7b9385f" target="_blank">Support Us</a>
                             """
                         )
 
