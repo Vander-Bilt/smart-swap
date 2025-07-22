@@ -91,6 +91,25 @@ def run():
             max-height: 238.4px;
             overflow-y: auto !important;
         }
+        .gradient-text {
+          font-size: 30px !important;
+          font-weight: bold;
+          background: -webkit-linear-gradient(#95bec9, #b899c7);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+        #filelist label {
+            font-size: 22px !important;
+            background: linear-gradient(to right, #E0F2F7, #F0E6F5); !important;
+        }
+        #sourceimg label {
+            font-size: 22px !important;
+            background: linear-gradient(to right, #E0F2F7, #F0E6F5);
+        }
+        #btn-start {
+            font-size: 22px !important;
+            background: linear-gradient(to right, #E0F2F7, #F0E6F5);
+        }
 """
 
 
@@ -265,7 +284,19 @@ def run():
                 hidden_finger2 = gr.Textbox(visible=False)
                 hidden_ip = gr.Textbox(visible=False)
 
-                gr.Markdown(f"## {roop.metadata.name} {roop.metadata.version}")
+                # gr.Markdown(f"## {roop.metadata.name} {roop.metadata.version}")
+                gr.Markdown(
+                """
+                <h1 class="gradient-text">Roop Unleashed</h1>
+
+                One-click face swap. Take a video and replace the face in it with a face of your choice. 
+
+                如果你觉得有所帮助，欢迎支持我们做的更好！ <a href="" target="_blank">支持一下</a>
+
+                If you found this useful, your support would be greatly appreciated as we strive to improve! <a href="" target="_blank">Support Us</a>
+                """
+                )
+
                 # gr.HTML(util.create_version_html(), elem_id="versions")
             with gr.Tab("Face Swap"):
                 with gr.Row():
@@ -274,12 +305,12 @@ def run():
                         with gr.Row():
                                 bt_remove_selected_input_face = gr.Button("Remove selected")
                                 bt_clear_input_faces = gr.Button("Clear all", variant='stop')
-                        bt_srcimg = gr.Image(label='Source Face Image', type='filepath', tool=None)
+                        bt_srcimg = gr.Image(label='STEP 1: Source Face Image', elem_id="sourceimg", type='filepath', tool=None)
                     with gr.Column():
-                        target_faces = gr.Gallery(label="Target faces", allow_preview=True, preview=True, height=128, object_fit="scale-down")
+                        target_faces = gr.Gallery(label="Target faces",  allow_preview=True, preview=True, height=128, object_fit="scale-down")
                         with gr.Row():
                                 bt_remove_selected_target_face = gr.Button("Remove selected")
-                        bt_destfiles = gr.Files(label='Target File(s)', file_count="multiple", elem_id='filelist')
+                        bt_destfiles = gr.Files(label='STEP 2: Target File(s)', file_count="multiple", elem_id='filelist')
                         with gr.Row():
                             target_url_input = gr.Textbox(label="Target URL (Image/Video)", placeholder="Enter URL here...")
                             bt_download_target_url = gr.Button("Download from URL")
