@@ -336,48 +336,48 @@ def run():
                 hidden_ip = gr.Textbox(visible=False)
 
                 # gr.Markdown(f"## {roop.metadata.name} {roop.metadata.version}")
-            with gr.Row():
-                with gr.Column():
-                    gr.Markdown(
-                        """
-                        <h1 class="gradient-text">Roop Unleashed</h1>
-                        One-click face swap. Take a video and replace the face in it with a face of your choice. <br/>
-                        1️⃣ Upload Source Face Image  2️⃣ Upload Target File(s)  3️⃣ Click Start
-                        """
-                    )
-                with gr.Column():
-                    gr.HTML(
-                        """
+                with gr.Row():
+                    with gr.Column():
+                        gr.Markdown(
+                            """
+                            <h1 class="gradient-text">Roop Unleashed</h1>
+                            One-click face swap. Take a video and replace the face in it with a face of your choice. <br/>
+                            1️⃣ Upload Source Face Image  2️⃣ Upload Target File(s)  3️⃣ Click Start
+                            """
+                        )
+                    with gr.Column():
+                        gr.HTML(
+                            """
 
-                                <div style="display: flex; align-items: center; gap: 5px;">
-                                    <p style="margin: 0; white-space: nowrap;">如果你觉得有所帮助，欢迎支持我们做的更好！</p>
-                
-                                    <a href="#open-modal-zh" class="modal-trigger">支持一下</a>
-                                    
-                                    <div id="open-modal-zh" class="modal">
-                                        <div class="modal-content">
-                                            <iframe id='pay_zh' src='https://donate365.pages.dev/index_zh.html' style='border:none;width:100%;padding:28px;background:#f9f9f9;' height='712' title='vanderbilt'></iframe>
-                                            <a href="#" class="close-button">❎ 关闭</a>
+                                    <div style="display: flex; align-items: center; gap: 5px;">
+                                        <p style="margin: 0; white-space: nowrap;">如果你觉得有所帮助，欢迎支持我们做的更好！</p>
+                    
+                                        <a href="#open-modal-zh" class="modal-trigger">支持一下</a>
+                                        
+                                        <div id="open-modal-zh" class="modal">
+                                            <div class="modal-content">
+                                                <iframe id='pay_zh' src='https://donate.nav001.onine/index_zh.html' style='border:none;width:100%;padding:28px;background:#f9f9f9;' height='712' title='vanderbilt'></iframe>
+                                                <a href="#" class="close-button">❎ 关闭</a>
+                                            </div>
                                         </div>
+                                        
                                     </div>
                                     
-                                </div>
-                                
-                                <div style="display: flex; align-items: center; gap: 5px;">
-                                    <p style="margin: 0; white-space: nowrap;">If you found this useful, your support would be greatly appreciated as we strive to improve!</p>
-                
-                                    <a href="#open-modal" class="modal-trigger">Support Us!</a>
-                                    
-                                    <div id="open-modal" class="modal">
-                                        <div class="modal-content">
-                                            <iframe id='kofiframe' src='https://ko-fi.com/vanderbilt/?hidefeed=true&widget=true&embed=true&preview=true' style='border:none;width:100%;padding:28px;background:#f9f9f9;' height='712' title='vanderbilt'></iframe>
-                                            <a href="#" class="close-button">❎ Close</a>
+                                    <div style="display: flex; align-items: center; gap: 5px;">
+                                        <p style="margin: 0; white-space: nowrap;">If you found this useful, your support would be greatly appreciated as we strive to improve!</p>
+                    
+                                        <a href="#open-modal" class="modal-trigger">Support Us!</a>
+                                        
+                                        <div id="open-modal" class="modal">
+                                            <div class="modal-content">
+                                                <iframe id='kofiframe' src='https://ko-fi.com/vanderbilt/?hidefeed=true&widget=true&embed=true&preview=true' style='border:none;width:100%;padding:28px;background:#f9f9f9;' height='712' title='vanderbilt'></iframe>
+                                                <a href="#" class="close-button">❎ Close</a>
+                                            </div>
                                         </div>
+                                        
                                     </div>
-                                    
-                                </div>
-                        """    
-                    )
+                            """    
+                        )
 
 
                 # gr.HTML(util.create_version_html(), elem_id="versions")
