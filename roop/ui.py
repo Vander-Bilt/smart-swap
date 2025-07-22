@@ -86,33 +86,81 @@ def run():
     
     run_server = True
     mycss = """
-        span {color: var(--block-info-text-color)}
-        #filelist {
-            max-height: 238.4px;
-            overflow-y: auto !important;
-        }
-        .gradient-text {
-          font-size: 30px !important;
-          font-weight: bold;
-          background: -webkit-linear-gradient(#B708C0, #0C21E5);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-        }
-        #filelist label {
-            font-size: 22px !important;
-            color: white;
-            background: linear-gradient(to right, #B708C0, #0C21E5); !important;
-        }
-        #sourceimg label {
-            font-size: 22px !important;
-            color: white;
-            background: linear-gradient(to right, #B708C0, #0C21E5);
-        }
-        #btn-start {
-            font-size: 22px !important;
-            color: white;
-            background: linear-gradient(to right, #B708C0, #0C21E5);
-        }
+            span {color: var(--block-info-text-color)}
+            #filelist {
+                max-height: 238.4px;
+                overflow-y: auto !important;
+            }
+            .gradient-text {
+            font-size: 30px !important;
+            font-weight: bold;
+            background: -webkit-linear-gradient(#B708C0, #0C21E5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            }
+            #filelist label {
+                font-size: 22px !important;
+                color: white;
+                background: linear-gradient(to right, #B708C0, #0C21E5); !important;
+            }
+            #sourceimg label {
+                font-size: 22px !important;
+                color: white;
+                background: linear-gradient(to right, #B708C0, #0C21E5);
+            }
+            #btn-start {
+                font-size: 22px !important;
+                color: white;
+                background: linear-gradient(to right, #B708C0, #0C21E5);
+            }
+
+
+    /* 模态窗口容器（遮罩层） */
+    .modal {
+        position: fixed; /* 固定定位，覆盖整个视口 */
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7); /* 半透明黑色背景 */
+        display: none; /* 默认隐藏 */
+        justify-content: center; /* 水平居中内容 */
+        align-items: center; /* 垂直居中内容 */
+        z-index: 1000; /* 确保在其他内容之上 */
+    }
+
+    /* 当 URL 的哈希片段匹配模态窗口 ID 时显示 */
+    .modal:target {
+        display: flex; /* 使用 flex 布局居中内容 */
+    }
+
+    /* 模态窗口内容区域 */
+    .modal-content {
+        background-color: #fff;
+        padding: 0px;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        max-width: 500px; /* 最大宽度 */
+        width: 100%; /* 响应式宽度 */
+        position: relative; /* 用于定位关闭按钮 */
+    }
+
+    /* 关闭按钮样式 */
+    .close-button {
+        position: absolute;
+        bottom: 1.2rem;
+        right: 1.2rem;
+        color: #aaa;
+        font-size: 18px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .close-button:hover {
+        color: #333;
+    }
+
+
     """
 
 
@@ -288,24 +336,49 @@ def run():
                 hidden_ip = gr.Textbox(visible=False)
 
                 # gr.Markdown(f"## {roop.metadata.name} {roop.metadata.version}")
-                with gr.Row():
-                    with gr.Column():
-                        gr.Markdown(
-                            """
-                            <h1 class="gradient-text">Roop Unleashed</h1>
+            with gr.Row():
+                with gr.Column():
+                    gr.Markdown(
+                        """
+                        <h1 class="gradient-text">Roop Unleashed</h1>
+                        One-click face swap. Take a video and replace the face in it with a face of your choice. <br/>
+                        1️⃣ Upload Source Face Image  2️⃣ Upload Target File(s)  3️⃣ Click Start
+                        """
+                    )
+                with gr.Column():
+                    gr.HTML(
+                        """
 
-                            One-click face swap. Take a video and replace the face in it with a face of your choice. <br/>
-                            1️⃣ Upload Source Face Image  2️⃣ Upload Target File(s)  3️⃣ Click Start
+                                <div style="display: flex; align-items: center; gap: 5px;">
+                                    <p style="margin: 0; white-space: nowrap;">如果你觉得有所帮助，欢迎支持我们做的更好！</p>
+                
+                                    <a href="#open-modal-zh" class="modal-trigger">支持一下</a>
+                                    
+                                    <div id="open-modal-zh" class="modal">
+                                        <div class="modal-content">
+                                            <iframe id='pay_zh' src='https://donate365.pages.dev/index_zh.html' style='border:none;width:100%;padding:28px;background:#f9f9f9;' height='712' title='vanderbilt'></iframe>
+                                            <a href="#" class="close-button">❎ 关闭</a>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                
+                                <div style="display: flex; align-items: center; gap: 5px;">
+                                    <p style="margin: 0; white-space: nowrap;">If you found this useful, your support would be greatly appreciated as we strive to improve!</p>
+                
+                                    <a href="#open-modal" class="modal-trigger">Support Us!</a>
+                                    
+                                    <div id="open-modal" class="modal">
+                                        <div class="modal-content">
+                                            <iframe id='kofiframe' src='https://ko-fi.com/vanderbilt/?hidefeed=true&widget=true&embed=true&preview=true' style='border:none;width:100%;padding:28px;background:#f9f9f9;' height='712' title='vanderbilt'></iframe>
+                                            <a href="#" class="close-button">❎ Close</a>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                        """    
+                    )
 
-                            """
-                        )
-                    with gr.Column():
-                        gr.Markdown(
-                            """
-                            如果你觉得有所帮助，欢迎支持我们做的更好！ <a href="https://www.notion.so/heng365/215de91f2176810081dde376b1cad4a0" target="_blank">支持一下</a><br/>
-                            If you found this useful, your support would be greatly appreciated as we strive to improve! <a href="https://www.notion.so/heng365/224de91f217681cabb54c124f7b9385f" target="_blank">Support Us</a>
-                            """
-                        )
 
                 # gr.HTML(util.create_version_html(), elem_id="versions")
             with gr.Tab("Face Swap"):
