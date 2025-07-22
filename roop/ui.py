@@ -356,7 +356,7 @@ def run():
                                         
                                         <div id="open-modal-zh" class="modal">
                                             <div class="modal-content">
-                                                <iframe id='pay_zh' src='https://donate.nav001.onine/index_zh.html' style='border:none;width:100%;padding:28px;background:#f9f9f9;' height='712' title='vanderbilt'></iframe>
+                                                <iframe id='pay_zh' src='https://donate.nav001.online/index_zh.html' style='border:none;width:100%;padding:28px;background:#f9f9f9;' height='712' title='vanderbilt'></iframe>
                                                 <a href="#" class="close-button">❎ 关闭</a>
                                             </div>
                                         </div>
