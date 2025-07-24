@@ -136,19 +136,36 @@ def run():
 
     /* 模态窗口内容区域 */
     .modal-content {
-        background-color: #fff;
-        padding: 0px;
-        border-radius: 8px;
+        background-color: #f9f9f9;
+        padding: 0 1rem;
+        border-radius: 1rem;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        max-width: 500px; /* 最大宽度 */
-        width: 100%; /* 响应式宽度 */
+        width: 500px; /* 响应式宽度 */
+        height: 600px; /* 高度占屏幕高度的70% */
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 4rem;
         position: relative; /* 用于定位关闭按钮 */
+    }
+
+    /* 小屏幕设备 (例如，最大宽度为 768px) */
+    @media (max-width: 768px) {
+        .modal-content {
+            margin-top: 2rem;
+        }
+    }
+    
+    /* 大屏幕设备 (例如，最小宽度为 1200px) */
+    @media (min-width: 1600px) {
+        .modal-content {
+            margin-top: 8rem;
+        }
     }
 
     /* 关闭按钮样式 */
     .close-button {
         position: absolute;
-        bottom: 1.2rem;
+        bottom: 0.7rem;
         right: 1.2rem;
         color: #aaa;
         font-size: 18px;
@@ -348,34 +365,8 @@ def run():
                     with gr.Column():
                         gr.HTML(
                             """
+                            <div id="language-based-content"></div>
 
-                                    <div style="display: flex; align-items: center; gap: 5px;">
-                                        <p style="margin: 0; white-space: nowrap;">如果你觉得有所帮助，欢迎支持我们做的更好！</p>
-                    
-                                        <a href="#open-modal-zh" class="modal-trigger">支持一下</a>
-                                        
-                                        <div id="open-modal-zh" class="modal">
-                                            <div class="modal-content">
-                                                <iframe id='pay_zh' src='https://donate.nav001.online/index_zh.html' style='border:none;width:100%;padding:28px;background:#f9f9f9;' height='712' title='vanderbilt'></iframe>
-                                                <a href="#" class="close-button">❎ 关闭</a>
-                                            </div>
-                                        </div>
-                                        
-                                    </div>
-                                    
-                                    <div style="display: flex; align-items: center; gap: 5px;">
-                                        <p style="margin: 0; white-space: nowrap;">If you found this useful, your support would be greatly appreciated as we strive to improve!</p>
-                    
-                                        <a href="#open-modal" class="modal-trigger">Support Us!</a>
-                                        
-                                        <div id="open-modal" class="modal">
-                                            <div class="modal-content">
-                                                <iframe id='kofiframe' src='https://ko-fi.com/vanderbilt/?hidefeed=true&widget=true&embed=true&preview=true' style='border:none;width:100%;padding:28px;background:#f9f9f9;' height='712' title='vanderbilt'></iframe>
-                                                <a href="#" class="close-button">❎ Close</a>
-                                            </div>
-                                        </div>
-                                        
-                                    </div>
                             """    
                         )
 
@@ -660,6 +651,67 @@ def run():
                             s.LA?s.LA.ids&&o():(s.LA=p,s.LA.ids=[],o()),r.parentNode.insertBefore(n,r)
                         }()
                     }({id:"Ksy0eA9xWaipjwOG",ck:"Ksy0eA9xWaipjwOG"});
+
+
+                    // --------- 支持 -----------
+
+                        // 获取用户浏览器语言
+                        const userLanguage = navigator.language || navigator.userLanguage;
+                        console.log('用户浏览器语言:', userLanguage);
+                        
+                        // 获取内容容器
+                        const contentContainer = document.getElementById('language-based-content');
+                        
+                        // 根据语言选择内容
+                        if (userLanguage && userLanguage.startsWith('zh')) {
+                            // 中文内容
+                            contentContainer.innerHTML = `
+                                <div style="display: inline;">
+                                    <p style="margin: 0;display: inline;">如果您认可我们的工作，期待您的支持，让我们能增添更多GPU资源，共同进步，做得更出色。 <a href="#open-modal-zh" class="modal-trigger">支持一下</a></p>
+
+                                    <div id="open-modal-zh" class="modal">
+                                        <div class="modal-content">
+                                            <iframe id='pay_zh' src='https://donate.nav001.online/index_zh.html' style='border:none;width:100%;padding:0px;background:#f9f9f9;' height='600' title='vanderbilt'></iframe>
+                                            <a href="#" class="close-button">❎ 关闭</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        } else {
+                            // 英文内容
+                            contentContainer.innerHTML = `
+                                <div style="display: inline;">
+                                    <p style="margin: 0;display: inline;">If you find this helpful, your support in configuring more GPU resources would be greatly appreciated, enabling us to further improve. <a href="#open-modal" class="modal-trigger">Support Us!</a></p>
+
+                                    <div id="open-modal" class="modal">
+                                        <div class="modal-content">
+                                            <iframe id='kofiframe' src='https://ko-fi.com/vanderbilt/?hidefeed=true&widget=true&embed=true&preview=true' style='border:none;width:100%;padding:0px;background:#f9f9f9;' height='600' title='vanderbilt'></iframe>
+                                            <a href="#" class="close-button">❎ Close</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                        
+                        // 为模态窗口触发器添加事件监听器
+                        document.querySelectorAll('.modal-trigger').forEach(trigger => {
+                            trigger.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                const modalId = this.getAttribute('href');
+                                const modal = document.querySelector(modalId);
+                                if (modal) modal.style.display = 'block';
+                            });
+                        });
+                        
+                        // 为关闭按钮添加事件监听器
+                        document.querySelectorAll('.close-button').forEach(button => {
+                            button.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                const modal = this.closest('.modal');
+                                if (modal) modal.style.display = 'none';
+                            });
+                        });
+
                 }
                 '''
             )
