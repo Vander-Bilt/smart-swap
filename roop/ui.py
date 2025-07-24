@@ -365,8 +365,9 @@ def run():
                     with gr.Column():
                         gr.HTML(
                             """
-                            <div id="language-based-content" style="margin-right: 1rem; margin-left:auto;"></div>
-
+                            <div style="display: flex; justify-content: flex-end;">
+                            <div id="language-based-content" style="margin-right: 1rem;"></div>
+                            </div>
                             """    
                         )
 
@@ -666,8 +667,9 @@ def run():
                         if (userLanguage && userLanguage.startsWith('zh')) {
                             // 中文内容
                             contentContainer.innerHTML = `
-                                <div style="display: inline;">
-                                    <a href="#open-modal-zh" class="modal-trigger">支持一下</a>
+                                <div style="display: inline-flex; align-items: center; gap: 0.2rem;">
+                                    <img src="https://donate.nav001.online/images/logomark.png" width="32" height="26" />
+                                    <a href="#open-modal-zh" class="modal-trigger" style="color: blue;text-decoration: underline;">支持一下</a>
 
                                     <div id="open-modal-zh" class="modal">
                                         <div class="modal-content">
@@ -680,8 +682,9 @@ def run():
                         } else {
                             // 英文内容
                             contentContainer.innerHTML = `
-                                <div style="display: inline;">
-                                    <a href="#open-modal" class="modal-trigger">Support Us!</a>
+                                <div style="display: inline-flex; align-items: center; gap: 0.2rem;">
+                                    <img src="https://donate.nav001.online/images/logomark.png" width="32" height="26" />
+                                    <a href="#open-modal" class="modal-trigger" style="color: blue;text-decoration: underline;">Support Us!</a>
 
                                     <div id="open-modal" class="modal">
                                         <div class="modal-content">
