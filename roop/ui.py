@@ -137,21 +137,20 @@ def run():
     /* 模态窗口内容区域 */
     .modal-content {
         background-color: #f9f9f9;
-        padding: 0 1rem;
+        padding: 1rem 1rem;
         border-radius: 1rem;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        width: 500px; /* 响应式宽度 */
-        height: 600px; /* 高度占屏幕高度的70% */
+        width: 660px; /* 响应式宽度 */
+        /* height: 600px; 高度占屏幕高度的70% */
         margin-left: auto;
         margin-right: auto;
-        margin-top: 4rem;
         position: relative; /* 用于定位关闭按钮 */
     }
 
     /* 小屏幕设备 (例如，最大宽度为 768px) */
     @media (max-width: 768px) {
         .modal-content {
-            margin-top: 2rem;
+            margin-top: 1.5rem;
         }
     }
     
@@ -176,6 +175,7 @@ def run():
     .close-button:hover {
         color: #333;
     }
+
 
 
     """
@@ -672,8 +672,16 @@ def run():
                                     <a href="#open-modal-zh" class="modal-trigger" style="color: blue;text-decoration: underline;">支持一下</a>
 
                                     <div id="open-modal-zh" class="modal">
-                                        <div class="modal-content">
-                                            <iframe id='pay_zh' src='https://donate.nav001.online/index_zh.html' style='border:none;width:100%;padding:0px;background:#f9f9f9;' height='600' title='vanderbilt'></iframe>
+                                        <div class="modal-content" style="margin-top: 2.5rem;">
+                                            <div style="display: inline-flex; align-items: center; gap: 0.2rem;">
+                                                <img src="https://donate.nav001.online/images/logomark.png" width="60" height="48" />
+                                                <h1>支持一下</h1>
+                                            </div>
+                                            
+                                            <hr style="margin: 5px 0;" />
+                                            <p style="font-size: 1rem;">如果觉得软件不错，欢迎支持我们！</p>
+                                            <p style="font-size: 1rem;">我们希望能增加更多GPU来提升算力。您的支持，无论多少，都是我们前进的巨大动力，能让我们走得更远，给大家提供更优质的服务！</p>
+                                            <iframe id='pay_zh' src='https://donate.nav001.online/index_zh.html?theme=light' style='border:none;width:100%;padding:0px;background:#f9f9f9;' height='420' title='vanderbilt'></iframe>
                                             <a href="#" class="close-button">❎ 关闭</a>
                                         </div>
                                     </div>
@@ -687,8 +695,9 @@ def run():
                                     <a href="#open-modal" class="modal-trigger" style="color: blue;text-decoration: underline;">Support Us!</a>
 
                                     <div id="open-modal" class="modal">
-                                        <div class="modal-content">
-                                            <iframe id='kofiframe' src='https://ko-fi.com/vanderbilt/?hidefeed=true&widget=true&embed=true&preview=true' style='border:none;width:100%;padding:0px;background:#f9f9f9;' height='600' title='vanderbilt'></iframe>
+                                        <div class="modal-content" style="margin-top: 0.2rem;">
+                                            <p>If you find this helpful, your support in configuring more GPU resources would be greatly appreciated, enabling us to further improve.</p>
+                                            <iframe id='kofiframe' src='https://ko-fi.com/vanderbilt/?hidefeed=true&widget=true&embed=true&preview=true' style='border:none;width:100%;padding-top:1px;background:rgba(1, 1, 1, 0.4);' height='610' title='vanderbilt'></iframe>
                                             <a href="#" class="close-button">❎ Close</a>
                                         </div>
                                     </div>
