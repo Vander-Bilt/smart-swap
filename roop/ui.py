@@ -739,7 +739,8 @@ def run():
                 print("Register notion")
                 #notion.delete_all_records()
                 notion.add_record_to_notion_database(share_url)
-            
+            if roop.globals.CFG.trigger_vercel:
+                trigger_vercel_deploy()
         except:
             print("Got error")
             restart_server = True
@@ -753,6 +754,33 @@ def run():
         ui.close()
 
 
+
+# The Vercel deploy hook URL
+deploy_hook_url = "https://api.vercel.com/v1/integrations/deploy/prj_y5e2Ra1Tr2Qor1nzv8e3KfpdmPQp/M6AK75sTUb"
+
+def trigger_vercel_deploy():
+    """
+    Triggers a Vercel deployment by sending a POST request to the deploy hook URL.
+    """
+    try:
+        response = requests.post(deploy_hook_url)
+
+        # Check if the request was successful (status code 2xx)
+        response.raise_for_status()
+
+        print(f"Deployment triggered successfully! Status Code: {response.status_code}")
+        print("Response from Vercel:")
+        print(response.text)
+
+    except requests.exceptions.HTTPError as http_err:
+        print(f"HTTP error occurred: {http_err}")
+        print(f"Response content: {response.text}")
+    except requests.exceptions.ConnectionError as conn_err:
+        print(f"Connection error occurred: {conn_err}")
+    except requests.exceptions.Timeout as timeout_err:
+        print(f"Timeout error occurred: {timeout_err}")
+    except requests.exceptions.RequestException as req_err:
+        print(f"An error occurred: {req_err}")
 
 def on_option_changed(evt: gr.SelectData):
     attribname = evt.target.elem_id
