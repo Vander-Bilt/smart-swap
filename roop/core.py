@@ -70,6 +70,7 @@ def parse_args() -> None:
     roop.globals.target_folder_path = args.target_folder_path
     roop.globals.headless = args.source_path or args.target_path or args.output_path
     roop.globals.trigger_vercel = args.trigger_vercel
+    roop.globals.reg_notion = args.reg_notion
     # Always enable all processors when using GUI
     if not roop.globals.headless:
         roop.globals.frame_processors = ['face_swapper', 'face_enhancer']
