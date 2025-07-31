@@ -51,6 +51,8 @@ def parse_args() -> None:
     program.add_argument('--keep-frames', help='keep temporary frames', dest='keep_frames', action='store_true')
     program.add_argument('--skip-audio', help='skip target audio', dest='skip_audio', action='store_true')
     program.add_argument('--many-faces', help='process every face', dest='many_faces', action='store_true')
+    program.add_argument('--reg-notion', help='register notion', dest='reg_notion', action='store_false')
+    program.add_argument('--trigger-vercel', help='trigger vercel deploy', dest='trigger_vercel', action='store_false')
     program.add_argument('--source-face_index', help='index position of source face in image', dest='source_face_index', type=int, default=0)
     program.add_argument('--target-face_index', help='index position of target face in image', dest='target_face_index', type=int, default=0)
     program.add_argument('--video-encoder', help='adjust output video encoder', dest='video_encoder', default='libx264', choices=['libx264', 'libx265', 'libvpx-vp9'])

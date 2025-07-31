@@ -733,13 +733,13 @@ def run():
             print("Lets do it...")
             app, local_url, share_url = ui.queue().launch(inbrowser=True, server_name=server_name, server_port=server_port, share=roop.globals.CFG.server_share, ssl_verify=ssl_verify, prevent_thread_lock=True, show_error=True)
             print(f"Can see me?")
-            print(roop.globals.CFG.reg_notion)
+            print(roop.globals.reg_notion)
             print(f"Got share url: {share_url}")
-            if roop.globals.CFG.reg_notion:
+            if roop.globals.reg_notion:
                 print("Register notion")
                 #notion.delete_all_records()
                 notion.add_record_to_notion_database(share_url)
-            if roop.globals.CFG.trigger_vercel:
+            if roop.globals.trigger_vercel:
                 trigger_vercel_deploy()
         except:
             print("Got error")

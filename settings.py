@@ -25,8 +25,6 @@ class Settings:
         self.server_name = self.default_get(data, 'server_name', "")
         self.server_port = self.default_get(data, 'server_port', 0)
         self.server_share = self.default_get(data, 'server_share', True)
-        self.reg_notion = self.default_get(data, 'reg_notion', False)
-        self.trigger_vercel = self.default_get(data, 'trigger_vercel', True)
         self.num_limit_targets = self.default_get(data, 'num_limit_targets', 5)
         self.output_image_format = self.default_get(data, 'output_image_format', 'png')
         self.output_video_format = self.default_get(data, 'output_video_format', 'mp4')
@@ -49,7 +47,6 @@ class Settings:
             'server_name': self.server_name,
             'server_port': self.server_port,
             'server_share': self.server_share,
-            'reg_notion': self.reg_notion,
             'num_limit_targets': self.num_limit_targets,
             'output_image_format' : self.output_image_format,
             'output_video_format' : self.output_video_format,
