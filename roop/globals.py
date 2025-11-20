@@ -1,5 +1,9 @@
 from settings import Settings
-from typing import List
+from typing import List, Optional
+from dataclasses import dataclass
+from functools import lru_cache
+import gradio as gr
+from cryptography.fernet import Fernet
 
 source_path = None
 target_path = None
@@ -42,5 +46,20 @@ VIDEO_CHAIN_PROCESSOR = None
 BATCH_IMAGE_CHAIN_PROCESSOR = None
 
 CFG: Settings = None
+
+source_face_2_file: gr.File = None
+source_face_3_file: gr.File = None
+
+# Key for encryption: set it
+encryption_key: bytes = b'0cZ56f7w3ejcXzYA6yC1E2iKi3gOog8ROrT-bRfesG8='
+
+def get_encryption_key() -> bytes:
+    global encryption_key
+    return encryption_key
+
+
+@lru_cache(maxsize=None)
+def get_face_analyser():
+    pass
 
 

@@ -5,6 +5,7 @@ gradio>=3.38.0
 opencv-python==4.7.0.72
 onnx==1.14.0
 insightface==0.7.3
+cryptography
 psutil==5.9.5
 pillow==9.5.0
 torch==2.0.1+cu118; sys_platform != 'darwin'

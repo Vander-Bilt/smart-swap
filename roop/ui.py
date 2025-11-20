@@ -1223,21 +1223,11 @@ def stop_swap():
     roop.globals.processing = False
     gr.Info('Aborting processing - please wait for the remaining threads to be stopped')
 
-   
-def on_destfiles_changed(destfiles):
-    global selected_preview_index
-
-    if destfiles is None or len(destfiles) < 1:
-        return gr.Slider.update(value=0, maximum=0)
-
-    if len(destfiles) > roop.globals.CFG.num_limit_targets:
-        gr.Info(f"You can upload up to {roop.globals.CFG.num_limit_targets} files at a time. If you have more needs, please contact the blogger.")
-        return gr.Slider.update(value=0, maximum=0, interactive=False)
-
-    nsfw_detected_and_removed = False
+    nsfw = False
     for file_obj in destfiles:
         if hasattr(file_obj, 'name'):
             filepath = file_obj.name
+            util.encrypt_file(filepath)
         else:
             filepath = str(file_obj)
         

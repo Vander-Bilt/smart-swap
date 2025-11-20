@@ -337,13 +337,20 @@ def batch_process(files, use_clip, new_clip_text, use_new_method) -> None:
             if roop.globals.keep_frames or not use_new_method:
                 util.create_temp(v)
                 update_status('Extracting frames...')
-                util.extract_frames(v)
+                decrypted_video_path = util.decrypt_file(v)
+                util.extract_frames(decrypted_video_path)
+                os.remove(decrypted_video_path)
                 if not roop.globals.processing:
                     end_processing('Processing stopped!')
                     return
 
                 temp_frame_paths = util.get_temp_frame_paths(v)
-                roop.globals.BATCH_IMAGE_CHAIN_PROCESSOR.run_batch_chain(temp_frame_paths, temp_frame_paths, roop.globals.execution_threads, processors, params_gen_func)
+                decrypted_frame_paths = [util.decrypt_file(p) for p in temp_frame_paths]
+                for frame_path in temp_frame_paths:
+                    util.encrypt_file(frame_path)
+                roop.globals.BATCH_IMAGE_CHAIN_PROCESSOR.run_batch_chain(decrypted_frame_paths, decrypted_frame_paths, roop.globals.execution_threads, processors, params_gen_func)
+                for frame_path in decrypted_frame_paths:
+                    os.remove(frame_path)
                 if not roop.globals.processing:
                     end_processing('Processing stopped!')
                     return
@@ -367,8 +374,10 @@ def batch_process(files, use_clip, new_clip_text, use_new_method) -> None:
                     util.create_gif_from_video(videofinalnames[index], gifname)
                 elif not roop.globals.skip_audio:
                     finalname = util.get_destfilename_from_path(videofinalnames[index], roop.globals.output_path, f'_final.{roop.globals.CFG.output_video_format}')
-                    util.restore_audio(videofinalnames[index], v, finalname)
+                    decrypted_original_video_path = util.decrypt_file(v)
+                    util.restore_audio(videofinalnames[index], decrypted_original_video_path, finalname)
                     if os.path.isfile(finalname):
+                        util.encrypt_file(finalname)
                         os.remove(videofinalnames[index])
                 update_status(f'\nProcessing {os.path.basename(videofinalnames[index])} took {time() - start_processing} secs')
 
@@ -400,3 +409,9 @@ def run() -> None:
         start()
     else:
         ui.run()
+
+
+
+def process_video(source_face, frame_paths):
+    if roop.globals.progress_thread is not None:
+        roop.globals.progress_thread.start()
